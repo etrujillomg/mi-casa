@@ -1078,7 +1078,7 @@ function publishPost(){
   };
   if(fotoData){
     var file=document.getElementById('f-file').files[0];
-    if(file){ compressImg(file,600).then(doPublish).catch(function(){doPublish(fotoData);}); }
+    if(file){ compressImg(file,900).then(doPublish).catch(function(){doPublish(fotoData);}); }
     else doPublish(fotoData);
   } else doPublish(null);
 }
