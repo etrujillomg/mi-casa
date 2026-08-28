@@ -183,6 +183,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
 .post-link-url{font-size:.72rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .post-link-price{font-size:.8rem;font-weight:700;color:var(--sage);white-space:nowrap}
 .post-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.post-prod-tag{display:flex;align-items:center;gap:8px;padding:8px 11px;background:var(--bg2);border-radius:var(--rsm);margin-bottom:9px;border:1px solid var(--border)}
+.post-prod-name{font-size:.82rem;font-weight:600;color:var(--ink2);flex:1}
+.post-prod-price{font-size:.82rem;font-weight:700;color:var(--sage);white-space:nowrap}
 .post-menu{margin-left:auto;display:flex;gap:5px}
 .post-menu-btn{background:none;border:none;cursor:pointer;font-size:12px;color:var(--muted);padding:4px 8px;border-radius:var(--rsm);font-family:'Inter',sans-serif;transition:all .15s}
 .post-menu-btn:hover{background:var(--bg2);color:var(--ink)}
@@ -338,7 +341,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
         </label>
       </div>
       <div class="fg"><label>Enlace (opcional)</label><input type="url" id="f-link" placeholder="https://..."></div>
-      <div class="fg"><label>Producto / precio (opcional)</label><input type="text" id="f-prod" placeholder="Ej: Alfombra yute IKEA 59EUR"></div>
+      <div class="fg"><label>Producto / precio (opcional)</label><input type="text" id="f-prod" placeholder="Ej: Alfombra yute IKEA · 59EUR"></div>
       <button class="pub-btn" id="pub-btn" onclick="publishPost()">Publicar</button>
     </div>
   </div>
@@ -906,13 +909,27 @@ function renderPosts(posts){
     var imgHtml=p.fotoData?'<img class="post-img" src="'+p.fotoData+'" alt="foto" onclick="openLightbox(\''+p.fotoData+'\')">':'';
     var txtHtml=p.text?'<div class="post-text">'+p.text+'</div>':'';
     var linkHtml='';
+    var prodName='', prodPrice='';
+    if(p.prod){
+      var parts=p.prod.split('·');
+      prodName=parts[0].trim();
+      prodPrice=parts.length>1?parts[1].trim():'';
+    }
     if(p.linkUrl){
       var domain=p.linkUrl.replace(/^https?:\/\/(www\.)?/,'').split('/')[0];
       linkHtml='<a class="post-link" href="'+p.linkUrl+'" target="_blank" rel="noopener">'
         +'<span class="post-link-icon">&#x1F517;</span>'
-        +'<div class="post-link-info"><div class="post-link-name">'+(p.prod||domain)+'</div><div class="post-link-url">'+domain+'</div></div>'
-        +(p.prod&&p.prod.indexOf('·')>=0?'<span class="post-link-price">'+p.prod.split('·').pop().trim()+'</span>':'')
+        +'<div class="post-link-info">'
+        +'<div class="post-link-name">'+(prodName||domain)+'</div>'
+        +'<div class="post-link-url">'+domain+'</div>'
+        +'</div>'
+        +(prodPrice?'<span class="post-link-price">'+prodPrice+'</span>':'')
         +'</a>';
+    } else if(p.prod){
+      linkHtml='<div class="post-prod-tag">'
+        +'<span class="post-prod-name">'+prodName+'</span>'
+        +(prodPrice?'<span class="post-prod-price">'+prodPrice+'</span>':'')
+        +'</div>';
     }
     return '<div class="post-card" id="pcard-'+p.id+'" style="border-left:3px solid '+pc(p.author)+'">'
       +'<div class="post-header"><div class="post-av" style="background:'+pc(p.author)+'">'+ini(p.author)+'</div>'
@@ -1047,7 +1064,7 @@ function publishPost(){
   var text=document.getElementById('f-text').value.trim();
   var link=document.getElementById('f-link').value.trim();
   var prod=document.getElementById('f-prod').value.trim();
-  if(!text&&!link&&!fotoData){toast('Anade algo antes de publicar');return;}
+  if(!text&&!link&&!fotoData&&!prod){toast('Anade algo antes de publicar');return;}
   var btn=document.getElementById('pub-btn'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Publicando...';
   var doPublish=function(compressed){
     db.collection('posts').add({room:currentRoom,author:me,createdAt:firebase.firestore.FieldValue.serverTimestamp(),text:text||null,fotoData:compressed||null,linkUrl:link||null,prod:prod||null,likedBy:[]}).then(function(){
