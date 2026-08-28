@@ -324,7 +324,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
   </div>
   <div id="bottom-form">
     <div class="form-bar" onclick="toggleForm()">
-      <span class="form-bar-label">Anadir nota, enlace o foto</span>
+      <span class="form-bar-label">Anadir link, foto o referencia</span>
       <div class="form-bar-icon" id="ficon">+</div>
     </div>
     <div class="form-body" id="fbody">
@@ -897,7 +897,7 @@ function subscribePosts(){
 
 function renderPosts(posts){
   var el=document.getElementById('posts-list'); if(!el) return;
-  if(!posts.length){el.innerHTML='<div class="empty">Se la primera en publicar algo</div>';return;}
+  if(!posts.length){el.innerHTML='<div class="empty">Anade el primer link o referencia</div>';return;}
   el.innerHTML=posts.map(function(p){
     var liked=(p.likedBy||[]).indexOf(me)>=0;
     var lc=(p.likedBy||[]).length;
@@ -990,8 +990,8 @@ function renderRoom(){
     +'<div class="section"><div class="sec-lbl">Notas e ideas</div>'
     +'<div id="notas-section"><div class="empty" style="padding:16px">Cargando...</div></div>'
     +'</div>'
-    +'<div class="section"><div class="sec-lbl">Publicaciones</div>'
-    +'<button class="section-pub-btn" onclick="openFormFromSection()">+ Anadir publicacion, foto o enlace</button>'
+    +'<div class="section"><div class="sec-lbl">Links y referencias</div>'
+    +'<button class="section-pub-btn" onclick="openFormFromSection()">+ Anadir link, foto o referencia</button>'
     +'<div id="posts-list"><div class="empty">Cargando...</div></div>'
     +'</div>'
     +'<div class="section"><div class="sec-lbl">Decisiones</div>'
