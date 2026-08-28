@@ -159,7 +159,85 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
 .post-link-name{font-size:.82rem;font-weight:600;color:var(--sage-d)}
 .post-link-url{font-size:.72rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .post-link-price{font-size:.8rem;font-weight:700;color:var(--sage);white-space:nowrap}
-.post-actions{display:flex;gap:8px}
+.post-actions{display:flex;gap:8px;align-items:center}
+.post-menu{margin-left:auto;display:flex;gap:5px}
+.post-menu-btn{background:none;border:none;cursor:pointer;font-size:12px;color:var(--muted);padding:4px 8px;border-radius:var(--rsm);font-family:'Inter',sans-serif;transition:all .15s}
+.post-menu-btn:hover{background:var(--bg2);color:var(--ink)}
+.post-menu-btn.del:hover{background:var(--no-bg);color:var(--no)}
+.post-edit-area{padding:10px 13px;border-top:1px solid var(--bg3)}
+.post-edit-area textarea{width:100%;padding:8px 10px;border:1.5px solid var(--sage);border-radius:var(--rsm);font-family:'Inter',sans-serif;font-size:.88rem;color:var(--ink);background:var(--white);outline:none;resize:none;height:72px}
+.post-edit-area .edit-actions{display:flex;gap:7px;margin-top:7px}
+.post-edit-area button{padding:6px 14px;border:none;border-radius:var(--rsm);font-size:.82rem;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500}
+.post-edit-save{background:var(--sage);color:white}
+.post-edit-cancel{background:var(--bg2);color:var(--ink2)}
+
+/* Foto en inventario */
+.inv-foto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:10px}
+.inv-foto-sq{aspect-ratio:1/1;border-radius:6px;overflow:hidden;cursor:pointer;background:var(--bg3);position:relative}
+.inv-foto-sq img{width:100%;height:100%;object-fit:cover;display:block}
+.inv-foto-sq .f-del{position:absolute;top:3px;right:3px;background:rgba(26,24,20,.65);color:white;border:none;border-radius:50%;width:18px;height:18px;font-size:9px;cursor:pointer;display:none;align-items:center;justify-content:center}
+.inv-foto-sq:hover .f-del{display:flex}
+.inv-upload-foto{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;border-radius:6px;border:1.5px dashed var(--border2);background:var(--white);cursor:pointer;flex-direction:column;gap:2px;color:var(--muted);font-size:10px;transition:all .15s}
+.inv-upload-foto:hover{border-color:var(--sage);color:var(--sage);background:var(--sage-l)}
+.inv-upload-foto input{display:none}
+
+/* Notas */
+.nota-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;margin-bottom:8px;border-left:3px solid var(--clay)}
+.nota-card.reply{border-left-color:var(--sage);background:var(--sage-l)}
+.nota-head{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.nota-reply-to{font-size:11px;color:var(--muted);margin-bottom:6px;padding:4px 8px;background:var(--bg2);border-radius:4px;border-left:2px solid var(--border2)}
+.nota-text{font-size:.88rem;color:var(--ink2);line-height:1.55;margin-bottom:8px}
+.nota-actions{display:flex;gap:7px;align-items:center}
+.nota-reply-btn{background:none;border:1px solid var(--border2);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.nota-reply-btn:hover{border-color:var(--sage);color:var(--sage);background:var(--sage-l)}
+.nota-del-btn{background:none;border:none;font-size:11px;color:var(--muted);cursor:pointer;padding:3px 6px;border-radius:4px;margin-left:auto}
+.nota-del-btn:hover{color:var(--no);background:var(--no-bg)}
+
+/* Formulario notas inline */
+.nota-form{background:var(--white);border:1.5px solid var(--sage);border-radius:var(--r);padding:12px;margin-bottom:8px}
+.nota-form .reply-banner{font-size:11px;color:var(--sage);margin-bottom:7px;display:flex;align-items:center;justify-content:space-between}
+.nota-form .reply-banner button{background:none;border:none;cursor:pointer;color:var(--muted);font-size:13px}
+.nota-form textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--rsm);font-size:.88rem;font-family:'Inter',sans-serif;color:var(--ink);background:var(--bg);outline:none;resize:none;height:68px}
+.nota-form textarea:focus{border-color:var(--sage)}
+.nota-form-actions{display:flex;gap:7px;margin-top:8px}
+.nota-submit{padding:7px 16px;background:var(--sage);color:white;border:none;border-radius:var(--rsm);font-size:.82rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif}
+.nota-cancel{padding:7px 12px;background:var(--bg2);color:var(--ink2);border:none;border-radius:var(--rsm);font-size:.82rem;cursor:pointer;font-family:'Inter',sans-serif}
+.add-nota-btn{width:100%;padding:10px;border:1.5px dashed var(--border2);border-radius:var(--r);background:var(--white);cursor:pointer;font-size:.85rem;color:var(--muted);font-family:'Inter',sans-serif;transition:all .15s;text-align:center;margin-top:4px}
+.nota-foto-upload{display:block;border:1.5px dashed var(--border2);border-radius:var(--rsm);padding:10px;text-align:center;cursor:pointer;color:var(--muted);font-size:.8rem;background:var(--bg);transition:all .15s;margin-top:8px}
+.nota-foto-upload:hover{border-color:var(--sage);color:var(--sage);background:var(--sage-l)}
+.nota-foto-upload input{display:none}
+.nota-img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--rsm);display:block;margin-bottom:8px;cursor:pointer}
+.nota-img-sq{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:var(--rsm);display:block;margin-bottom:8px;cursor:pointer}
+.add-nota-btn:hover{border-color:var(--sage);color:var(--sage);background:var(--sage-l)}
+
+/* Botón publicar en sección */
+.section-pub-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;background:var(--ink);color:white;border:none;border-radius:var(--r);font-size:.88rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:12px;transition:background .15s}
+.section-pub-btn:hover{background:var(--ink2)}
+
+/* ── DECISIONES ── */
+.decision-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden}
+.decision-card-header{display:flex;align-items:flex-start;gap:10px;padding:12px 13px}
+.decision-status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.dot-comprado{background:#16a34a}
+.dot-pendiente{background:#d97706}
+.dot-decidir{background:#9A9088}
+.decision-body{flex:1}
+.decision-title{font-size:.88rem;font-weight:500;color:var(--ink);margin-bottom:3px}
+.decision-origin{font-size:.75rem;color:var(--muted);margin-bottom:6px}
+.decision-tags{display:flex;gap:6px;flex-wrap:wrap}
+.dtag{font-size:.72rem;padding:2px 8px;border-radius:20px;font-weight:500;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .15s}
+.dtag-comprado{background:#f0fdf4;color:#16a34a}
+.dtag-comprado.active{background:#16a34a;color:white}
+.dtag-pendiente{background:#fffbeb;color:#d97706}
+.dtag-pendiente.active{background:#d97706;color:white}
+.dtag-decidir{background:var(--bg2);color:var(--muted)}
+.dtag-decidir.active{background:var(--muted);color:white}
+.decision-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:3px 5px;border-radius:4px;flex-shrink:0;align-self:flex-start}
+.decision-del:hover{color:var(--no);background:var(--no-bg)}
+.add-decision-btn{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border:1px solid var(--border2);border-radius:20px;background:none;cursor:pointer;font-size:.72rem;color:var(--muted);font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap}
+.add-decision-btn:hover{border-color:var(--clay);color:var(--clay);background:var(--clay-l)}
+.add-decision-btn.added{border-color:var(--sage);color:var(--sage);background:var(--sage-l)}
+.empty-decisions{text-align:center;padding:20px;color:var(--muted);font-size:.85rem;font-style:italic}
 .like-btn{display:flex;align-items:center;gap:4px;padding:5px 12px;border:1px solid var(--border);border-radius:20px;background:none;cursor:pointer;font-size:.78rem;color:var(--muted);font-family:'Inter',sans-serif;transition:all .15s}
 .like-btn:hover,.like-btn.liked{background:var(--clay-l);border-color:var(--clay);color:var(--clay)}
 .empty{text-align:center;padding:24px;color:var(--muted);font-size:.88rem}
@@ -457,11 +535,12 @@ function renderInvItem(item){
   const cms = invComments[item.id]||[];
   const vsi = (v.si||[]).includes(me), vno = (v.no||[]).includes(me);
   const sc = (v.si||[]).length, nc = (v.no||[]).length;
+  let html = '';
   const cmsHtml = cms.map(c=>`<div class="icm">
     <div class="icm-av" style="background:${pc(c.author)}">${ini(c.author)}</div>
     <div class="icm-txt"><b>${c.author}</b><span>${c.text}</span></div>
   </div>`).join('');
-  return `<div class="inv-item" id="inv-${item.id}">
+  html = `<div class="inv-item" id="inv-${item.id}">
     <div class="inv-hd" onclick="toggleItem('${item.id}')">
       <span class="inv-em">${item.em}</span>
       <span class="inv-nm">${item.nm}</span>
@@ -479,11 +558,63 @@ function renderInvItem(item){
         <input type="text" id="ci-${item.id}" placeholder="Comentar este objeto…" onkeydown="if(event.key==='Enter')addInvComment('${item.id}')">
         <button onclick="addInvComment('${item.id}')">Enviar</button>
       </div>
+      <div style="margin-top:10px">
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:7px">Fotos del objeto</div>
+        <div class="inv-foto-grid" id="invfgrid-${item.id}">
+          <label class="inv-upload-foto"><span style="font-size:16px">+</span><span>Foto</span><input type="file" accept="image/*" multiple onchange="uploadInvFoto('${item.id}',this)"></label>
+        </div>
+      </div>
     </div>
   </div>`;
+  setTimeout(()=>loadInvFotos('${item.id}'), 80);
+  return html;
 }
 
 function toggleItem(id){ document.getElementById('ibd-'+id)?.classList.toggle('open'); }
+
+let invFotos = {}; // {itemId: [{id, src, author}]}
+
+async function uploadInvFoto(itemId, input){
+  const files = Array.from(input.files); if(!files.length) return;
+  for(const file of files){
+    try{
+      const data = await compressImg(file, 800);
+      const docRef = await db.collection('inv_fotos').add({
+        room:currentRoom, itemId, dataUrl:data, author:me,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+      if(!invFotos[itemId]) invFotos[itemId]=[];
+      invFotos[itemId].push({id:docRef.id, src:data, author:me});
+      renderInvFotoGrid(itemId);
+    }catch(e){ toast('Error al subir foto'); }
+  }
+  input.value=''; toast('Foto añadida al objeto');
+}
+
+async function delInvFoto(itemId, fotoId){
+  try{ await db.collection('inv_fotos').doc(fotoId).delete(); }catch(e){}
+  invFotos[itemId] = (invFotos[itemId]||[]).filter(x=>x.id!==fotoId);
+  renderInvFotoGrid(itemId);
+}
+
+function renderInvFotoGrid(itemId){
+  const grid = document.getElementById('invfgrid-'+itemId); if(!grid) return;
+  const fs = invFotos[itemId]||[];
+  const items = fs.map(f=>`<div class="inv-foto-sq">
+    <img src="${f.src}" alt="foto" onclick="openLightbox('${f.src}')">
+    <button class="f-del" onclick="delInvFoto('${itemId}','${f.id}')">✕</button>
+  </div>`).join('');
+  const upBtn = `<label class="inv-upload-foto"><span style="font-size:16px">+</span><span>Foto</span><input type="file" accept="image/*" multiple onchange="uploadInvFoto('${itemId}',this)"></label>`;
+  grid.innerHTML = items + upBtn;
+}
+
+async function loadInvFotos(itemId){
+  try{
+    const snap = await db.collection('inv_fotos').where('itemId','==',itemId).where('room','==',currentRoom).get();
+    invFotos[itemId] = snap.docs.map(d=>({id:d.id,...d.data(),src:d.data().dataUrl}));
+    renderInvFotoGrid(itemId);
+  }catch(e){ renderInvFotoGrid(itemId); }
+}
 
 async function vote(itemId, tipo, e){
   e.stopPropagation();
@@ -611,7 +742,16 @@ async function delFotoEspacio(id){
 function subscribePosts(){
   unsub = db.collection('posts').where('room','==',currentRoom).orderBy('createdAt','desc')
     .onSnapshot(snap=>{ renderPosts(snap.docs.map(d=>({id:d.id,...d.data()}))); },
-    err=>{ const el=document.getElementById('posts-list'); if(el)el.innerHTML=`<div class="empty">⚠️ Error al cargar. Revisa la conexión.</div>`; });
+    err=>{
+      // Fallback: load without orderBy if index not ready
+      db.collection('posts').where('room','==',currentRoom).get()
+        .then(snap=>{
+          const posts = snap.docs.map(d=>({id:d.id,...d.data()}))
+            .sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()||0; const tb=b.createdAt?.toMillis?.()||0; return tb-ta; });
+          renderPosts(posts);
+        })
+        .catch(()=>{ const el=document.getElementById('posts-list'); if(el)el.innerHTML=`<div class="empty">⚠️ Error al cargar. Revisa la conexión.</div>`; });
+    });
 }
 
 function renderPosts(posts){
@@ -620,7 +760,13 @@ function renderPosts(posts){
   el.innerHTML = posts.map(p=>{
     const liked = (p.likedBy||[]).includes(me);
     const lc = (p.likedBy||[]).length;
-    return `<div class="post-card" style="border-left:3px solid ${pc(p.author)}">
+    const isAuthor = p.author === me;
+    const ownerBtns = isAuthor ? `
+      <div class="post-menu">
+        <button class="post-menu-btn" onclick="editPost('${p.id}','${(p.text||'').replace(/'/g,"\'")}')">✏️ Editar</button>
+        <button class="post-menu-btn del" onclick="deletePost('${p.id}')">🗑 Borrar</button>
+      </div>` : '';
+    return `<div class="post-card" id="pcard-${p.id}" style="border-left:3px solid ${pc(p.author)}">
       <div class="post-header">
         <div class="post-av" style="background:${pc(p.author)}">${ini(p.author)}</div>
         <div class="post-meta">
@@ -630,7 +776,7 @@ function renderPosts(posts){
       </div>
       ${p.fotoData?`<img class="post-img" src="${p.fotoData}" alt="foto" onclick="openLightbox('${p.fotoData}')">` :''}
       <div class="post-body">
-        ${p.text?`<div class="post-text">${p.text}</div>`:''}
+        <div class="post-text-wrap" id="ptxt-${p.id}">${p.text?`<div class="post-text">${p.text}</div>`:''}</div>
         ${p.linkUrl?`<a class="post-link" href="${p.linkUrl}" target="_blank" rel="noopener">
           <span class="post-link-icon">🔗</span>
           <div class="post-link-info">
@@ -641,10 +787,185 @@ function renderPosts(posts){
         </a>`:''}
         <div class="post-actions">
           <button class="like-btn ${liked?'liked':''}" onclick="likePost('${p.id}',${liked})">♥ ${lc||''}</button>
+          <button class="add-decision-btn" onclick="addDecision('${(p.text||p.prod||'Publicación').slice(0,80).replace(/'/g,'\\'')','publicación')">📌 Añadir a decisiones</button>
+          ${ownerBtns}
+        </div>
+      </div>
+      <div class="post-edit-area" id="pedit-${p.id}" style="display:none">
+        <textarea id="petxt-${p.id}" placeholder="Edita tu publicación…">${p.text||''}</textarea>
+        <div class="edit-actions">
+          <button class="post-edit-save" onclick="saveEditPost('${p.id}')">Guardar</button>
+          <button class="post-edit-cancel" onclick="cancelEditPost('${p.id}')">Cancelar</button>
         </div>
       </div>
     </div>`;
   }).join('');
+}
+
+function editPost(id, currentText){
+  document.getElementById('pedit-'+id).style.display='block';
+  const ta = document.getElementById('petxt-'+id);
+  if(ta){ ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }
+}
+
+function cancelEditPost(id){
+  document.getElementById('pedit-'+id).style.display='none';
+}
+
+async function saveEditPost(id){
+  const ta = document.getElementById('petxt-'+id);
+  const newText = ta?.value.trim();
+  try{
+    await db.collection('posts').doc(id).update({ text: newText||null });
+    document.getElementById('pedit-'+id).style.display='none';
+    toast('Publicación actualizada');
+  }catch(e){ toast('Error al guardar'); }
+}
+
+// ── NOTAS E IDEAS ──
+let notasData = {}; // {roomId: [{id, author, text, foto, replyTo, ts}]}
+let notaReplyTo = null; // {id, author, text}
+let notaFotoData = null;
+
+async function loadNotas(){
+  try{
+    const snap = await db.collection('notas_ideas')
+      .where('room','==',currentRoom)
+      .orderBy('ts','asc').get();
+    notasData[currentRoom] = snap.docs.map(d=>({id:d.id,...d.data()}));
+  }catch(e){
+    // fallback sin orderBy
+    try{
+      const snap = await db.collection('notas_ideas').where('room','==',currentRoom).get();
+      notasData[currentRoom] = snap.docs.map(d=>({id:d.id,...d.data()}))
+        .sort((a,b)=>(a.ts||0)-(b.ts||0));
+    }catch(e2){ notasData[currentRoom]=[]; }
+  }
+  renderNotas();
+}
+
+function renderNotas(){
+  const el = document.getElementById('notas-section'); if(!el) return;
+  const notas = notasData[currentRoom]||[];
+  const room = ROOMS.find(r=>r.id===currentRoom);
+
+  const notasHtml = notas.map(n=>{
+    const isAuthor = n.author===me;
+    const replyHtml = n.replyTo ? `<div class="nota-reply-to">↩ ${n.replyTo.author}: "${(n.replyTo.text||'').slice(0,60)}${(n.replyTo.text||'').length>60?'…':''}"</div>` : '';
+    return `<div class="nota-card${n.replyTo?'  reply':''}" id="nota-${n.id}">
+      <div class="nota-head">
+        <div class="av" style="background:${pc(n.author)};width:24px;height:24px;font-size:9px;flex-shrink:0">${ini(n.author)}</div>
+        <span style="font-size:12px;font-weight:600;color:var(--ink)">${n.author}</span>
+        <span style="font-size:11px;color:var(--muted);margin-left:4px">${n.ts?timeAgo({toDate:()=>new Date(n.ts)}):'ahora'}</span>
+      </div>
+      ${replyHtml}
+      ${n.foto?`<img class="nota-img-sq" src="${n.foto}" alt="imagen" onclick="openLightbox('${n.foto}')">` :''}
+      ${n.text?`<div class="nota-text">${n.text}</div>`:''}
+      <div class="nota-actions">
+        <button class="nota-reply-btn" onclick="startReply('${n.id}','${n.author}','${(n.text||'').replace(/'/g,"\'").slice(0,80)}')">↩ Responder</button>
+        ${isAuthor?`<button class="nota-del-btn" onclick="deleteNota('${n.id}')">🗑</button>`:''}
+        <button class="add-decision-btn" data-nota onclick="addDecision(this.closest('[id]').querySelector('.nota-text')?.textContent?.slice(0,80)||'','nota')">📌 Decisiones</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="idea-box" style="margin-bottom:10px"><p>${room.idea}</p></div>
+    ${notasHtml}
+    <div id="nota-form-wrap"></div>
+    <button class="add-nota-btn" onclick="showNotaForm()">✏️ Escribir una nota o idea</button>`;
+}
+
+function showNotaForm(replyTo){
+  notaReplyTo = replyTo||null;
+  const wrap = document.getElementById('nota-form-wrap'); if(!wrap) return;
+  const replyBanner = replyTo ? `<div class="reply-banner"><span>↩ Respondiendo a <strong>${replyTo.author}</strong></span><button onclick="cancelNota()">✕</button></div>` : '';
+  wrap.innerHTML = `<div class="nota-form">
+    ${replyBanner}
+    <textarea id="nota-txt" placeholder="${replyTo?'Escribe tu respuesta…':'Escribe tu nota o idea…'}"></textarea>
+    <label class="nota-foto-upload" id="nota-foto-label">
+      <span id="nota-foto-lbl-txt">🖼 Subir imagen (IA, inspiración, render…)</span>
+      <input type="file" id="nota-foto-input" accept="image/*" onchange="pickNotaFoto(this)">
+    </label>
+    <img id="nota-foto-preview" style="display:none;width:100%;max-height:120px;object-fit:cover;border-radius:var(--rsm);margin-top:6px">
+    <div class="nota-form-actions">
+      <button class="nota-submit" onclick="submitNota()">Publicar</button>
+      <button class="nota-cancel" onclick="cancelNota()">Cancelar</button>
+    </div>
+  </div>`;
+  document.getElementById('nota-txt')?.focus();
+  // hide add button
+  document.querySelector('.add-nota-btn')?.style && (document.querySelector('.add-nota-btn').style.display='none');
+}
+
+function startReply(id, author, text){
+  showNotaForm({id, author, text});
+}
+
+function pickNotaFoto(input){
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    notaFotoData = e.target.result;
+    const prev = document.getElementById('nota-foto-preview');
+    if(prev){ prev.src = notaFotoData; prev.style.display='block'; }
+    const lbl = document.getElementById('nota-foto-lbl-txt');
+    if(lbl) lbl.textContent = '✅ Imagen lista';
+  };
+  reader.readAsDataURL(file);
+}
+
+function cancelNota(){
+  const wrap = document.getElementById('nota-form-wrap'); if(wrap) wrap.innerHTML='';
+  const btn = document.querySelector('.add-nota-btn'); if(btn) btn.style.display='';
+  notaReplyTo = null;
+  notaFotoData = null;
+}
+
+async function submitNota(){
+  const text = document.getElementById('nota-txt')?.value.trim();
+  if(!text && !notaFotoData){ toast('Escribe algo o añade una imagen'); return; }
+  let fotoCompressed = null;
+  if(notaFotoData){
+    try{
+      const file = document.getElementById('nota-foto-input')?.files[0];
+      if(file) fotoCompressed = await compressImg(file, 900);
+      else fotoCompressed = notaFotoData;
+    }catch(e){ fotoCompressed = notaFotoData; }
+  }
+  const nota = {
+    room:currentRoom, author:me, text:text||null,
+    foto:fotoCompressed||null,
+    ts:Date.now(),
+    replyTo: notaReplyTo||null
+  };
+  try{
+    const ref = await db.collection('notas_ideas').add({...nota, createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    nota.id = ref.id;
+    if(!notasData[currentRoom]) notasData[currentRoom]=[];
+    notasData[currentRoom].push(nota);
+    notaReplyTo=null; notaFotoData=null;
+    renderNotas();
+    toast('Nota publicada ✓');
+  }catch(e){ toast('Error al publicar'); }
+}
+
+async function deleteNota(id){
+  if(!confirm('¿Borrar esta nota?')) return;
+  try{
+    await db.collection('notas_ideas').doc(id).delete();
+    notasData[currentRoom]=(notasData[currentRoom]||[]).filter(x=>x.id!==id);
+    renderNotas(); toast('Nota eliminada');
+  }catch(e){ toast('Error al borrar'); }
+}
+
+async function deletePost(id){
+  if(!confirm('¿Borrar esta publicación?')) return;
+  try{
+    await db.collection('posts').doc(id).delete();
+    document.getElementById('pcard-'+id)?.remove();
+    toast('Publicación eliminada');
+  }catch(e){ toast('Error al borrar'); }
 }
 
 async function likePost(id, liked){
@@ -656,6 +977,86 @@ async function likePost(id, liked){
 }
 
 // ── FORM ──
+// ── DECISIONES ──
+let decisiones = {}; // {roomId: [{id, text, origin, status, author, ts}]}
+
+async function loadDecisiones(){
+  try{
+    const snap = await db.collection('decisiones').where('room','==',currentRoom).orderBy('ts','asc').get();
+    decisiones[currentRoom] = snap.docs.map(d=>({id:d.id,...d.data()}));
+  }catch(e){
+    try{
+      const snap = await db.collection('decisiones').where('room','==',currentRoom).get();
+      decisiones[currentRoom] = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.ts||0)-(b.ts||0));
+    }catch(e2){ decisiones[currentRoom]=[]; }
+  }
+  renderDecisiones();
+}
+
+function renderDecisiones(){
+  const el = document.getElementById('decisiones-section'); if(!el) return;
+  const items = decisiones[currentRoom]||[];
+  if(!items.length){
+    el.innerHTML=`<div class="empty-decisions">Aún no hay decisiones — añade una desde una nota o publicación</div>`;
+    return;
+  }
+  el.innerHTML = items.map(d=>{
+    const dot = d.status==='comprado'?'comprado':d.status==='pendiente'?'pendiente':'decidir';
+    const label = d.status==='comprado'?'✅ Comprado':d.status==='pendiente'?'🛒 Pendiente de comprar':'💡 Por decidir';
+    return `<div class="decision-card" id="dec-${d.id}">
+      <div class="decision-card-header">
+        <div class="decision-status-dot dot-${dot}"></div>
+        <div class="decision-body">
+          <div class="decision-title">${d.text}</div>
+          <div class="decision-origin">Añadido por ${d.author}${d.origin?' · desde: '+d.origin:''}</div>
+          <div class="decision-tags">
+            <button class="dtag dtag-comprado${d.status==='comprado'?' active':''}" onclick="setDecisionStatus('${d.id}','comprado')">✅ Comprado</button>
+            <button class="dtag dtag-pendiente${d.status==='pendiente'?' active':''}" onclick="setDecisionStatus('${d.id}','pendiente')">🛒 Pendiente</button>
+            <button class="dtag dtag-decidir${d.status==='decidir'?' active':''}" onclick="setDecisionStatus('${d.id}','decidir')">💡 Por decidir</button>
+          </div>
+        </div>
+        <button class="decision-del" onclick="deleteDecision('${d.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function addDecision(text, origin){
+  const item = {
+    room:currentRoom, text:(text||'').slice(0,200), origin:origin||'',
+    author:me, status:'decidir', ts:Date.now()
+  };
+  try{
+    const ref = await db.collection('decisiones').add({...item, createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    item.id = ref.id;
+    if(!decisiones[currentRoom]) decisiones[currentRoom]=[];
+    decisiones[currentRoom].push(item);
+    renderDecisiones();
+    toast('Añadido a decisiones ✓');
+  }catch(e){ toast('Error al guardar'); }
+}
+
+async function setDecisionStatus(id, status){
+  try{
+    await db.collection('decisiones').doc(id).update({status});
+    const d = (decisiones[currentRoom]||[]).find(x=>x.id===id);
+    if(d){ d.status=status; renderDecisiones(); }
+  }catch(e){ toast('Error al actualizar'); }
+}
+
+async function deleteDecision(id){
+  try{
+    await db.collection('decisiones').doc(id).delete();
+    decisiones[currentRoom]=(decisiones[currentRoom]||[]).filter(x=>x.id!==id);
+    renderDecisiones(); toast('Eliminado');
+  }catch(e){ toast('Error al borrar'); }
+}
+
+function openFormFromSection(){
+  if(!formOpen) toggleForm();
+  setTimeout(()=>document.getElementById('fbody').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
 function toggleForm(){
   formOpen = !formOpen;
   document.getElementById('fbody').classList.toggle('open', formOpen);
@@ -748,14 +1149,21 @@ async function renderRoom(){
     </div>
     <div class="section">
       <div class="sec-lbl">Notas e ideas</div>
-      <div class="idea-box"><p>${room.idea}</p></div>
+      <div id="notas-section"><div class="empty" style="padding:16px">Cargando…</div></div>
     </div>
     <div class="section">
       <div class="sec-lbl">Publicaciones</div>
+      <button class="section-pub-btn" onclick="openFormFromSection()">+ Añadir publicación, foto o enlace</button>
       <div id="posts-list"><div class="empty">💬 Cargando…</div></div>
+    </div>
+    <div class="section">
+      <div class="sec-lbl">Decisiones</div>
+      <div id="decisiones-section"><div class="empty-decisions">Cargando…</div></div>
     </div>`;
 
   loadFotosGrid();
+  loadNotas();
+  loadDecisiones();
   newSt = 'duda';
 }
 
