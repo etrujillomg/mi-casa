@@ -632,7 +632,7 @@ function renderInvFotoGrid(itemId){
   var grid=document.getElementById('invfgrid-'+itemId); if(!grid) return;
   var fs=invFotos[itemId]||[];
   var items=fs.map(function(f){
-    return '<div class="inv-foto-sq"><img src="'+f.src+'" alt="foto" onclick="openLightbox(\''+f.src+'\')"><button class="f-del" onclick="delInvFoto(\''+itemId+'\',\''+f.id+'\')">x</button></div>';
+    return '<div class="inv-foto-sq" onclick="openLightboxEl(this.querySelector(\"img\"))"><img src="'+f.src+'" alt="foto"><button class="f-del" onclick="delInvFoto(\''+itemId+'\',\''+f.id+'\')">x</button></div>';
   }).join('');
   grid.innerHTML=items+'<label class="inv-upload-foto"><span style="font-size:16px">+</span><span>Foto</span><input type="file" accept="image/*" multiple onchange="uploadInvFoto(\''+itemId+'\',this)"></label>';
 }
@@ -694,14 +694,15 @@ function loadFotosGrid(){
   db.collection('fotos_casa').where('room','==',currentRoom).orderBy('createdAt','asc').get().then(function(snap){
     var fotos=snap.docs.map(function(d){return {id:d.id,dataUrl:d.data().dataUrl,author:d.data().author};});
     var items=fotos.map(function(f){
-      return '<div class="foto-sq"><img src="'+f.dataUrl+'" alt="foto" onclick="openLightbox(\''+f.dataUrl+'\')" loading="lazy"><button class="f-del" onclick="delFotoEspacio(\''+f.id+'\')">x</button><span class="f-who">'+(f.author||'').split(' ')[0]+'</span></div>';
+      return '<div class="foto-sq" onclick="openLightboxEl(this)"><img src="'+f.dataUrl+'" alt="foto" loading="lazy"><button class="f-del" onclick="event.stopPropagation();delFotoEspacio(\''+f.id+'\')">x</button><span class="f-who">'+(f.author||'').split(' ')[0]+'</span></div>';
     }).join('');
     grid.innerHTML=items+'<label class="upload-foto"><span style="font-size:20px">+</span><span>Foto</span><input type="file" accept="image/*" multiple onchange="uploadFotoEspacio(this)"></label>';
+    grid.querySelectorAll('.foto-sq').forEach(function(el,i){ el._src=fotos[i].dataUrl; });
   }).catch(function(e){
     db.collection('fotos_casa').where('room','==',currentRoom).get().then(function(snap){
       var fotos=snap.docs.map(function(d){return {id:d.id,dataUrl:d.data().dataUrl,author:d.data().author};});
       var items=fotos.map(function(f){
-        return '<div class="foto-sq"><img src="'+f.dataUrl+'" alt="foto" onclick="openLightbox(\''+f.dataUrl+'\')" loading="lazy"><button class="f-del" onclick="delFotoEspacio(\''+f.id+'\')">x</button><span class="f-who">'+(f.author||'').split(' ')[0]+'</span></div>';
+        return '<div class="foto-sq" onclick="openLightboxEl(this)"><img src="'+f.dataUrl+'" alt="foto" loading="lazy"><button class="f-del" onclick="event.stopPropagation();delFotoEspacio(\''+f.id+'\')">x</button><span class="f-who">'+(f.author||'').split(' ')[0]+'</span></div>';
       }).join('');
       grid.innerHTML=items+'<label class="upload-foto"><span style="font-size:20px">+</span><span>Foto</span><input type="file" accept="image/*" multiple onchange="uploadFotoEspacio(this)"></label>';
     }).catch(function(){ grid.innerHTML='<div class="empty" style="grid-column:1/-1">Error al cargar fotos</div>'; });
@@ -733,7 +734,7 @@ function renderNotas(){
     var isAuthor=n.author===me;
     var replyHtml=n.replyTo?'<div class="nota-reply-to">Resp. a '+n.replyTo.author+': "'+((n.replyTo.text||'').slice(0,60))+'"</div>':'';
     var delBtn=isAuthor?'<button class="nota-del-btn" onclick="deleteNota(\''+n.id+'\')">&#x1F5D1;</button>':'';
-    var imgHtml=n.foto?'<img class="nota-img" src="'+n.foto+'" alt="imagen" onclick="openLightbox(\''+n.foto+'\')">':'';
+    var imgHtml=n.foto?'<img class="nota-img" src="'+n.foto+'" alt="imagen" onclick="openLightboxEl(this)">':'';
     var txtHtml=n.text?'<div class="nota-text">'+n.text+'</div>':'';
     return '<div class="nota-card'+(n.replyTo?' reply':'')+'" id="nota-'+n.id+'">'
       +'<div class="nota-head"><div class="av" style="background:'+pc(n.author)+';width:24px;height:24px;font-size:9px;flex-shrink:0">'+ini(n.author)+'</div>'
@@ -906,7 +907,7 @@ function renderPosts(posts){
     var lc=(p.likedBy||[]).length;
     var isAuthor=p.author===me;
     var ownerHtml=isAuthor?'<div class="post-menu"><button class="post-menu-btn" onclick="editPost(\''+p.id+'\')">Editar</button><button class="post-menu-btn del" onclick="deletePost(\''+p.id+'\')">Borrar</button></div>':'';
-    var imgHtml=p.fotoData?'<img class="post-img" src="'+p.fotoData+'" alt="foto" onclick="openLightbox(\''+p.fotoData+'\')">':'';
+    var imgHtml=p.fotoData?'<img class="post-img" src="'+p.fotoData+'" alt="foto" onclick="openLightboxEl(this)">':'';
     var txtHtml=p.text?'<div class="post-text">'+p.text+'</div>':'';
     var linkHtml='';
     var prodName='', prodPrice='';
@@ -1082,6 +1083,10 @@ function publishPost(){
   } else doPublish(null);
 }
 
+function openLightboxEl(el){
+  var src = el._src || (el.tagName==='IMG' ? el.src : el.querySelector('img').src);
+  openLightbox(src);
+}
 function openLightbox(src){ document.getElementById('lb-img').src=src; document.getElementById('lightbox').classList.add('open'); }
 function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
 function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},2600); }
