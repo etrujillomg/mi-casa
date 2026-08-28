@@ -100,6 +100,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
 .tag-si{background:var(--si-bg);color:var(--si)}
 .tag-duda{background:var(--duda-bg);color:var(--duda)}
 .tag-no{background:var(--no-bg);color:var(--no)}
+.tag-comprar{background:#EFF6FF;color:#2563EB}
 .inv-bd{display:none;padding:0 13px 12px;border-top:1px solid var(--bg3)}
 .inv-bd.open{display:block}
 .inv-desc{font-size:.8rem;color:var(--muted);padding:8px 0 10px;line-height:1.45}
@@ -135,6 +136,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-s
 .stbtn.sel-si{background:var(--si-bg);border-color:var(--si);color:var(--si)}
 .stbtn.sel-duda{background:var(--duda-bg);border-color:var(--duda);color:var(--duda)}
 .stbtn.sel-no{background:var(--no-bg);border-color:var(--no);color:var(--no)}
+.stbtn.sel-comprar{background:#EFF6FF;border-color:#2563EB;color:#2563EB}
 .add-inv-form button.go{width:100%;padding:10px;background:var(--ink);color:white;border:none;border-radius:var(--rsm);font-size:.88rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif}
 
 .nota-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;margin-bottom:8px;border-left:3px solid var(--clay)}
@@ -365,39 +367,46 @@ const NOMBRES = Object.keys(PERSONAS);
 
 const INV_BASE = {
   salon:[
-    {id:'s1',em:'&#x1FA91;',nm:'Mesa comedor negra + sillas',st:'si',  desc:'La mesa negra con sus sillas. Se queda.'},
-    {id:'s2',em:'&#x2615;',nm:'Mesa bajita de centro',       st:'duda',desc:'En duda si encaja con la nueva deco.'},
-    {id:'s3',em:'&#x1F4FA;',nm:'Mueble del televisor',       st:'no',  desc:'Fuera.'},
-    {id:'s4',em:'&#x1F4DA;',nm:'Armario junto a la ventana', st:'si',  desc:'Se queda. Buen almacenamiento.'},
-    {id:'s5',em:'&#x1F3B8;',nm:'Guitarras',                  st:'duda',desc:'En duda: decoracion en pared?'}
+    {id:'s1',em:'&#x1FA91;',nm:'Mesa comedor negra',         st:'si',     desc:'Se queda.'},
+    {id:'s2',em:'&#x1F4DA;',nm:'Estanteria junto a ventana', st:'si',     desc:'Se queda 100%.'},
+    {id:'s3',em:'&#x1F6CB;',nm:'Sofa actual',                st:'no',     desc:'Se vende.'},
+    {id:'s4',em:'&#x1F4FA;',nm:'Mueble del televisor',       st:'no',     desc:'Fuera.'},
+    {id:'s5',em:'&#x1F4E6;',nm:'Mueble con cajas',           st:'no',     desc:'Se tira.'},
+    {id:'s6',em:'&#x1F4DA;',nm:'Libreria',                   st:'duda',   desc:'En duda.'},
+    {id:'s7',em:'&#x2615;',nm:'Mesa de salon',               st:'duda',   desc:'En duda.'},
+    {id:'s8',em:'&#x1F6CB;',nm:'Sofa nuevo',                 st:'comprar',desc:'Por comprar.'},
+    {id:'s9',em:'&#x1F9F6;',nm:'Alfombra',                   st:'comprar',desc:'Por comprar.'}
   ],
   cuarto:[
-    {id:'c1',em:'&#x1F6CF;',nm:'Cama doble',       st:'si',  desc:'Se queda, posible cambio de posicion.'},
-    {id:'c2',em:'&#x1F6AA;',nm:'Armario empotrado',st:'si',  desc:'Fijo, no se puede quitar.'},
-    {id:'c3',em:'&#x1F4BB;',nm:'Escritorio',       st:'duda',desc:'Lo quitamos o convertimos en tocador?'}
+    {id:'c1',em:'&#x1F6CF;',nm:'Cama doble con canape',  st:'si',     desc:'Se queda.'},
+    {id:'c2',em:'&#x1F6AA;',nm:'Armario empotrado',       st:'si',     desc:'Fijo, no se puede quitar.'},
+    {id:'c3',em:'&#x1FA9F;',nm:'Comoda negra',            st:'duda',   desc:'En duda, se baraja pintarla.'},
+    {id:'c4',em:'&#x1F6CF;',nm:'Mesita de noche',         st:'comprar',desc:'Por comprar.'},
+    {id:'c5',em:'&#x1F6CC;',nm:'Cabecera',                st:'comprar',desc:'Por comprar.'},
+    {id:'c6',em:'&#x1F9FA;',nm:'Ropa de cama',            st:'comprar',desc:'Por comprar.'}
   ],
   bano:[
-    {id:'b1',em:'&#x1F6BF;',nm:'Mampara de ducha',st:'si', desc:'Se queda.'},
-    {id:'b2',em:'&#x1FA9E;',nm:'Espejo actual',   st:'no', desc:'Se cambia por uno con luz.'},
-    {id:'b3',em:'&#x1F6BD;',nm:'Sanitarios',      st:'si', desc:'Se quedan.'}
+    {id:'b1',em:'&#x1FAA5;',nm:'Mueble del bano',         st:'duda',desc:'En duda si se conserva o cambia.'},
+    {id:'b2',em:'&#x1F6BF;',nm:'Sanitarios y azulejos',   st:'no',  desc:'Todo nuevo, reforma completa.'}
   ],
   cocina:[
-    {id:'k1',em:'&#x1FAB5;',nm:'Muebles de cocina',st:'duda',desc:'Verde oscuro o negro mate?'},
-    {id:'k2',em:'&#x2B1B;',nm:'Encimera negra',   st:'si',  desc:'Se queda.'},
-    {id:'k3',em:'&#x1F50C;',nm:'Electrodomesticos',st:'si', desc:'Todos se quedan.'}
+    {id:'k1',em:'&#x1F9CA;',nm:'Electrodomesticos (nevera, lavadora...)',st:'si',     desc:'Todos se quedan, informativo.'},
+    {id:'k2',em:'&#x2B1B;',nm:'Encimera negra',                          st:'si',     desc:'Se queda.'},
+    {id:'k3',em:'&#x1FAB5;',nm:'Puertas de armarios',                    st:'duda',   desc:'Se estudia cambiarlas si no hay reforma.'},
+    {id:'k4',em:'&#x1F9F1;',nm:'Azulejos adhesivos',                     st:'comprar',desc:'Opcion si no hay reforma completa.'}
   ],
   recibidor:[
-    {id:'r1',em:'&#x1F9E5;',nm:'Perchas actuales',st:'no',  desc:'Se quitan.'},
-    {id:'r2',em:'&#x1FA9E;',nm:'Sin espejo aun',  st:'duda',desc:'Idea: espejo grande para dar amplitud.'}
+    {id:'r1',em:'&#x1F6CB;',nm:'Mueble del recibidor',    st:'si',  desc:'Se queda, se vaciara.'},
+    {id:'r2',em:'&#x1FA9E;',nm:'Espejo (ya comprado)',     st:'si',  desc:'Pendiente de colgar.'}
   ]
 };
 
 const ROOMS = [
-  {id:'salon',    label:'Salon',    estado:'Sofa gris, libreria con guitarras, mesa de comedor negra. Buena luz al sur.',     idea:'Verde salvia en la pared principal. Alfombra de fibras naturales grande. Reorganizar la libreria.',   plano:'4,20 x 5,10 m - Dos ventanas al sur'},
-  {id:'cuarto',   label:'Cuarto',   estado:'Cama doble, armario empotrado, escritorio en la esquina. Poca luz natural.',      idea:'Cambiar la posicion de la cama. Mas iluminacion: apliques o lamparas colgantes.',                    plano:'2,61 x 3,57 m - Ventana al norte'},
-  {id:'bano',     label:'Bano',     estado:'Azulejos azules, ducha con mampara, lavabo de pedestal y WC.',                   idea:'Vinilos para los azulejos. Espejo con luz. Plantas.',                                                 plano:'1,80 x 2,40 m - Sin ventana exterior'},
-  {id:'cocina',   label:'Cocina',   estado:'Cocina en L, muebles blancos roto, encimera de granito negro.',                  idea:'Pintar armarios de verde oscuro? Barra americana para ganar superficie.',                             plano:'2,60 x 3,10 m - Ventana sobre el fregadero'},
-  {id:'recibidor',label:'Recibidor',estado:'Pasillo estrecho 90cm, perchas viejas, suelo de parquet.',                       idea:'Mueble de entrada con zapatero. Espejo grande.',                                                      plano:'0,90 x 3,20 m'}
+  {id:'salon',    label:'Salon',    estado:'Suelo de parquet (no se cambia). Gotele fino en todas las paredes. Dos ventanas con radiadores blancos debajo. Sofa actual se vende. Mesa comedor negra se queda. Hay libreria, mesa de salon, mueble tele y mueble con cajas (se tira). Estanteria junto a la ventana se queda. Pendiente reorganizar el espacio.', idea:'', plano:'Ancho: 1,27 + 1,28 m (dos ventanas) - Alto total: ~3,67 m - Forma irregular con entrante - Plano subido en fotos'},
+  {id:'cuarto',   label:'Cuarto',   estado:'Habitacion de 2,61 x 3,57 m. Suelo de parquet, no se cambia. Gotele fino en todas las paredes. Armario empotrado en la pared del fondo. Cama doble con canape. Comoda negra en duda, se baraja pintarla. Poca luz, ventana orientada al norte.', idea:'', plano:'2,61 m ancho x 3,57 m largo - Armario empotrado 0,76 m - Puerta abajo derecha - Plano subido en fotos'},
+  {id:'bano',     label:'Bano',     estado:'Se reforma entero. La reforma la gestiona Pablo (hermano). El unico elemento en duda es si el mueble del bano se conserva o se cambia. Pablo subira aqui sus ideas y fotos de referencia, todos podemos opinar.', idea:'', plano:'1,80 x 2,40 m - Sin ventana exterior'},
+  {id:'cocina',   label:'Cocina',   estado:'Cocina equipada con todos los electrodomesticos: nevera, lavadora y demas (informativo, todo funciona). La reforma depende de como quede el bano y del tiempo disponible. Si no se reforma, se estudia cambiar las puertas de los armarios o poner azulejos adhesivos.', idea:'', plano:'2,60 x 3,10 m - Ventana sobre el fregadero'},
+  {id:'recibidor',label:'Recibidor',estado:'Pasillo estrecho (~90 cm). Suelo de parquet igual que el resto de la casa. Gotele fino en paredes. El mueble se queda, esta lleno ahora pero se vaciara. El espejo ya esta elegido y comprado, pendiente de colgar.', idea:'', plano:'0,90 x 3,20 m'}
 ];
 
 let me=null, currentRoom='salon', formOpen=false, newSt='duda', fotoData=null, unsub=null;
@@ -497,8 +506,9 @@ function switchRoom(id){
 }
 
 function stTag(s){
-  if(s==='si')   return '<span class="tag tag-si">Se queda</span>';
-  if(s==='no')   return '<span class="tag tag-no">Fuera</span>';
+  if(s==='si')      return '<span class="tag tag-si">Se queda</span>';
+  if(s==='no')      return '<span class="tag tag-no">Fuera</span>';
+  if(s==='comprar') return '<span class="tag tag-comprar">Por comprar</span>';
   return '<span class="tag tag-duda">En duda</span>';
 }
 
@@ -582,7 +592,7 @@ function delItem(itemId, e){
 
 function setNewSt(s){
   newSt=s;
-  ['si','duda','no'].forEach(function(x){
+  ['si','duda','no','comprar'].forEach(function(x){
     var b=document.getElementById('nst-'+x);
     if(b) b.className='stbtn'+(s===x?' sel-'+s:'');
   });
@@ -734,7 +744,7 @@ function renderNotas(){
       +'</div>'
       +'</div>';
   }).join('');
-  el.innerHTML='<div class="idea-box" style="margin-bottom:10px"><p>'+room.idea+'</p></div>'
+  el.innerHTML=(room.idea?'<div class="idea-box" style="margin-bottom:10px"><p>'+room.idea+'</p></div>':'')
     +notasHtml
     +'<div id="nota-form-wrap"></div>'
     +'<button class="add-nota-btn" onclick="showNotaForm()">Escribir una nota o idea</button>';
@@ -973,6 +983,7 @@ function renderRoom(){
     +'<button class="stbtn" id="nst-si" onclick="setNewSt(\'si\')">Se queda</button>'
     +'<button class="stbtn sel-duda" id="nst-duda" onclick="setNewSt(\'duda\')">En duda</button>'
     +'<button class="stbtn" id="nst-no" onclick="setNewSt(\'no\')">Fuera</button>'
+    +'<button class="stbtn" id="nst-comprar" onclick="setNewSt(\'comprar\')">Por comprar</button>'
     +'</div>'
     +'<button class="go" onclick="addExtra()">Anadir al inventario</button>'
     +'</div></div>'
