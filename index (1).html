@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Casa Madridejos</title>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500&family=Inter:wght@400;500;600&display=swap');
+:root{
+  --bg:#FAF7F2;--bg2:#F2ECE3;--bg3:#E8DFD0;
+  --white:#FFFFFF;--ink:#1A1814;--ink2:#4A4540;--muted:#9A9088;
+  --border:#DDD5C8;--border2:#C8BFB0;
+  --sage:#4A7C59;--sage-l:#EAF2EC;--sage-d:#2D5C3A;
+  --clay:#B5654A;--clay-l:#FAF0EB;
+  --si-bg:#F0FDF4;--si:#16a34a;
+  --duda-bg:#FFFBEB;--duda:#D97706;
+  --no-bg:#FEF2F2;--no:#DC2626;
+  --r:12px;--rsm:8px;--rcard:14px
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ── LOGIN ── */
+#login{min-height:100vh;display:flex;flex-direction:column;background:var(--bg2)}
+.login-hero{padding:3rem 1.5rem 2rem;text-align:center;background:var(--bg2);border-bottom:1px solid var(--border)}
+.app-name{font-family:'Lora',serif;font-size:32px;font-weight:500;color:var(--ink);letter-spacing:-.02em;margin-bottom:5px}
+.app-sub{font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
+.login-deco{display:flex;justify-content:center;align-items:flex-end;gap:6px;margin-top:20px;height:52px}
+.deco-sq{border-radius:6px;background:var(--bg3);border:1px solid var(--border)}
+.login-form{padding:1.5rem 1.25rem;flex:1}
+.form-q{font-size:13px;font-weight:500;color:var(--ink2);margin-bottom:12px;text-align:center}
+.chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:14px}
+.chip{padding:6px 14px;border:1.5px solid var(--border2);border-radius:20px;font-size:.82rem;cursor:pointer;background:var(--white);color:var(--ink2);font-family:'Inter',sans-serif;transition:all .15s;font-weight:500}
+.chip:hover{border-color:var(--sage);color:var(--sage)}
+.chip.sel{color:white;border-color:transparent;font-weight:600}
+.or-line{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);margin:0 0 12px}
+.or-line::before,.or-line::after{content:'';flex:1;height:.5px;background:var(--border)}
+.name-row{display:flex;gap:8px}
+.name-row input{flex:1;padding:10px 12px;border:1.5px solid var(--border2);border-radius:var(--rsm);font-size:.88rem;background:var(--white);color:var(--ink);outline:none;font-family:'Inter',sans-serif}
+.name-row input:focus{border-color:var(--sage)}
+.btn-enter{padding:10px 18px;background:var(--sage);color:white;border:none;border-radius:var(--rsm);font-size:.88rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap}
+.btn-enter:hover{background:var(--sage-d)}
+
+/* ── MAIN ── */
+#main{display:none}
+.wrap{max-width:680px;margin:0 auto}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(26,24,20,.06)}
+.topbar-left .tn{font-family:'Lora',serif;font-size:1.05rem;color:var(--ink);font-weight:500;letter-spacing:-.01em}
+.topbar-left .ts{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.user-pill{display:flex;align-items:center;gap:7px}
+.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:white;flex-shrink:0}
+.av-name{font-size:.8rem;color:var(--ink2);font-weight:500}
+
+/* PLANO */
+.plano-section{padding:12px 14px;border-bottom:1px solid var(--border)}
+.plano-lbl{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:9px}
+.plano-wrap{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.plano-wrap svg{width:100%;display:block}
+.hs{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:transform .15s}
+.hs:hover{transform:translate(-50%,-50%) scale(1.1)}
+.hsb{width:32px;height:32px;border-radius:50%;border:2px solid white;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,.15);animation:pulse 2.5s ease infinite}
+.hsb.active{animation:none;box-shadow:0 0 0 4px rgba(74,124,89,.3)}
+.hsl{background:rgba(26,24,20,.8);color:white;font-size:9px;font-weight:500;padding:2px 6px;border-radius:4px;white-space:nowrap}
+.plano-hint{font-size:.72rem;color:var(--muted);text-align:center;margin-top:7px}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,124,89,.3)}50%{box-shadow:0 0 0 6px rgba(74,124,89,0)}}
+
+/* TABS */
+.tabs{display:flex;overflow-x:auto;background:var(--white);border-bottom:1px solid var(--border);scrollbar-width:none;padding:0 6px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:10px 14px;border:none;background:none;font-family:'Inter',sans-serif;font-size:.8rem;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .15s;letter-spacing:.01em}
+.tab.active{color:var(--sage);border-bottom-color:var(--sage)}
+
+#content{padding-bottom:130px}
+.section{padding:14px 16px;border-bottom:1px solid var(--border)}
+.sec-lbl{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:11px}
+
+/* FOTOS 3x3 */
+.fotos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.foto-sq{aspect-ratio:1/1;border-radius:6px;overflow:hidden;cursor:pointer;background:var(--bg3);position:relative}
+.foto-sq img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .2s}
+.foto-sq:hover img{transform:scale(1.05)}
+.foto-sq .f-del{position:absolute;top:4px;right:4px;background:rgba(26,24,20,.65);color:white;border:none;border-radius:50%;width:20px;height:20px;font-size:10px;cursor:pointer;display:none;align-items:center;justify-content:center;line-height:1}
+.foto-sq:hover .f-del{display:flex}
+.foto-sq .f-who{position:absolute;bottom:4px;left:5px;background:rgba(26,24,20,.6);color:white;font-size:8px;padding:1px 5px;border-radius:4px}
+.upload-foto{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;border-radius:6px;border:1.5px dashed var(--border2);background:var(--white);cursor:pointer;flex-direction:column;gap:3px;color:var(--muted);font-size:11px;transition:all .15s}
+.upload-foto:hover{border-color:var(--sage);color:var(--sage);background:var(--sage-l)}
+.upload-foto input{display:none}
+.upload-foto span:first-child{font-size:20px}
+
+/* ESTADO EDITABLE */
+.estado-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;position:relative}
+.estado-edit-btn{position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;color:var(--muted);font-size:13px;padding:2px 6px;border-radius:4px;transition:all .15s}
+.estado-edit-btn:hover{background:var(--bg2);color:var(--ink)}
+.estado-text{font-size:.88rem;color:var(--ink2);line-height:1.55;padding-right:28px}
+.estado-textarea{width:100%;font-size:.88rem;border:1.5px solid var(--sage);border-radius:var(--rsm);padding:8px 10px;font-family:'Inter',sans-serif;color:var(--ink);background:var(--white);outline:none;resize:none;min-height:70px;line-height:1.55}
+.estado-save{margin-top:7px;padding:7px 16px;background:var(--sage);color:white;border:none;border-radius:var(--rsm);font-size:.82rem;cursor:pointer;font-family:'Inter',sans-serif}
+.plan-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rsm);padding:10px 13px;display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--muted)}
+
+/* INVENTARIO */
+.inv-item{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:7px;overflow:hidden}
+.inv-hd{display:flex;align-items:center;gap:9px;padding:11px 13px;cursor:pointer;user-select:none}
+.inv-em{font-size:1.1rem;flex-shrink:0}
+.inv-nm{font-size:.88rem;font-weight:500;flex:1;color:var(--ink)}
+.inv-del{background:none;border:none;cursor:pointer;font-size:12px;color:var(--muted);padding:3px 6px;border-radius:4px;transition:all .15s;flex-shrink:0}
+.inv-del:hover{color:var(--no);background:var(--no-bg)}
+.tag{font-size:.72rem;font-weight:500;padding:2px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.tag-si{background:var(--si-bg);color:var(--si)}
+.tag-duda{background:var(--duda-bg);color:var(--duda)}
+.tag-no{background:var(--no-bg);color:var(--no)}
+.inv-bd{display:none;padding:0 13px 12px;border-top:1px solid var(--bg3)}
+.inv-bd.open{display:block}
+.inv-desc{font-size:.8rem;color:var(--muted);padding:8px 0 10px;line-height:1.45}
+.inv-votes{display:flex;gap:7px;margin-bottom:10px}
+.vbtn{display:flex;align-items:center;gap:4px;padding:6px 13px;border:1px solid var(--border2);border-radius:20px;background:none;cursor:pointer;font-size:.78rem;font-family:'Inter',sans-serif;color:var(--ink2);transition:all .15s}
+.vbtn:hover{background:var(--sage-l);border-color:var(--sage);color:var(--sage)}
+.vbtn.vsi{background:var(--si-bg);border-color:var(--si);color:var(--si)}
+.vbtn.vno{background:var(--no-bg);border-color:var(--no);color:var(--no)}
+.inv-cms{display:flex;flex-direction:column;gap:5px;margin-bottom:9px}
+.icm{font-size:.8rem;padding:7px 10px;border-radius:var(--rsm);line-height:1.45;display:flex;gap:8px;align-items:flex-start;background:var(--bg)}
+.icm-av{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:white;flex-shrink:0;margin-top:1px}
+.icm-txt b{font-weight:600;margin-right:4px;font-size:.8rem}
+.icm-txt span{color:var(--ink2)}
+.iadd{display:flex;gap:6px}
+.iadd input{flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:var(--rsm);font-size:.8rem;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;outline:none}
+.iadd input:focus{border-color:var(--sage)}
+.iadd button{padding:7px 12px;background:var(--sage);color:white;border:none;border-radius:var(--rsm);font-size:.78rem;cursor:pointer;font-family:'Inter',sans-serif}
+
+/* AÑADIR INVENTARIO */
+.add-inv-form{background:var(--white);border:1.5px dashed var(--border2);border-radius:var(--r);padding:13px;margin-top:8px}
+.add-inv-form input[type=text]{width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:var(--rsm);font-size:.88rem;background:var(--bg);font-family:'Inter',sans-serif;outline:none;color:var(--ink);margin-bottom:9px}
+.add-inv-form input:focus{border-color:var(--sage)}
+.status-btns{display:flex;gap:6px;margin-bottom:10px}
+.stbtn{flex:1;padding:7px 4px;border:1.5px solid var(--border2);border-radius:20px;font-size:.75rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;background:var(--white);color:var(--ink2);text-align:center;transition:all .15s}
+.stbtn.sel-si{background:var(--si-bg);border-color:var(--si);color:var(--si)}
+.stbtn.sel-duda{background:var(--duda-bg);border-color:var(--duda);color:var(--duda)}
+.stbtn.sel-no{background:var(--no-bg);border-color:var(--no);color:var(--no)}
+.add-inv-form button.go{width:100%;padding:10px;background:var(--ink);color:white;border:none;border-radius:var(--rsm);font-size:.88rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif}
+.add-inv-form button.go:hover{background:var(--ink2)}
+
+/* NOTAS */
+.idea-box{background:var(--clay-l);border:1px solid #E8C4B0;border-radius:var(--r);padding:12px 14px;margin-bottom:8px}
+.idea-box p{font-size:.88rem;color:var(--ink2);line-height:1.55;font-style:italic}
+
+/* POSTS */
+.post-card{background:var(--white);border:1px solid var(--border);border-radius:var(--rcard);overflow:hidden;margin-bottom:10px}
+.post-header{display:flex;align-items:center;gap:9px;padding:11px 13px 8px}
+.post-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:white;flex-shrink:0}
+.post-meta{flex:1}
+.post-name{font-size:.88rem;font-weight:600;color:var(--ink)}
+.post-time{font-size:.72rem;color:var(--muted)}
+.post-img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;cursor:pointer}
+.post-body{padding:11px 13px}
+.post-text{font-size:.88rem;color:var(--ink2);line-height:1.55;margin-bottom:9px}
+.post-link{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--sage-l);border-radius:var(--rsm);margin-bottom:9px;text-decoration:none;border:1px solid rgba(74,124,89,.2)}
+.post-link-icon{font-size:15px;flex-shrink:0}
+.post-link-info{flex:1;min-width:0}
+.post-link-name{font-size:.82rem;font-weight:600;color:var(--sage-d)}
+.post-link-url{font-size:.72rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.post-link-price{font-size:.8rem;font-weight:700;color:var(--sage);white-space:nowrap}
+.post-actions{display:flex;gap:8px;align-items:center}
+.post-menu{margin-left:auto;display:flex;gap:5px}
+.post-menu-btn{background:none;border:none;cursor:pointer;font-size:12px;color:var(--muted);padding:4px 8px;border-radius:var(--rsm);font-family:'Inter',sans-serif;transition:all .15s}
+.post-menu-btn:hover{background:var(--bg2);color:var(--ink)}
+.post-menu-btn.del:hover{background:var(--no-bg);color:var(--no)}
+.post-edit-area{padding:10px 13px;border-top:1px solid var(--bg3)}
+.post-edit-area textarea{width:100%;padding:8px 10px;border:1.5px solid var(--sage);border-radius:var(--rsm);font-family:'Inter',sans-serif;font-size:.88rem;color:var(--ink);background:var(--white);outline:none;resize:none;height:72px}
+.post-edit-area .edit-actions{display:flex;gap:7px;margin-top:7px}
+.post-edit-area button{padding:6px 14px;border:none;border-radius:var(--rsm);font-size:.82rem;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500}
+.post-edit-save{background:var(--sage);color:white}
+.post-edit-cancel{background:var(--bg2);color:var(--ink2)}
+
+/* Foto en inventario */
+.inv-foto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:10px}
+.inv-foto-sq{aspect-ratio:1/1;border-radius:6px;overflow:hidden;cursor:pointer;background:var(--bg3);position:relative}
+.inv-foto-sq img{width:100%;height:100%;object-fit:cover;display:block}
+.inv-foto-sq .f-del{position:absolute;top:3px;right:3px;background:rgba(26,24,20,.65);color:white;border:none;border-radius:50%;width:18px;height:18px;font-size:9px;cursor:pointer;display:none;align-items:center;justify-content:center}
+.inv-foto-sq:hover .f-del{display:flex}
+.inv-upload-foto{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;border-radius:6px;border:1.5px dashed var(--border2);background:var(--white);cursor:pointer;flex-direction:column;gap:2px;color:var(--muted);font-size:10px;transition:all .15s}
+.inv-upload-foto:hover{border-color:var(--sage);color:var(--sage);background:var(--sage-l)}
+.inv-upload-foto input{display:none}
+
+/* Notas */
+.nota-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;margin-bottom:8px;border-left:3px solid var(--clay)}
+.nota-card.reply{border-left-color:var(--sage);background:var(--sage-l)}
+.nota-head{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.nota-reply-to{font-size:11px;color:var(--muted);margin-bottom:6px;padding:4px 8px;background:var(--bg2);border-radius:4px;border-left:2px solid var(--border2)}
+.nota-text{font-size:.88rem;color:var(--ink2);line-height:1.55;margin-bottom:8px}
+.nota-actions{display:flex;gap:7px;align-items:center}
+.nota-reply-btn{background:none;border:1px solid var(--border2);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.nota-reply-btn:hover{border-color:var(--sage);color:var(--sage);background:var(--sage-l)}
+.nota-del-btn{background:none;border:none;font-size:11px;color:var(--muted);cursor:pointer;padding:3px 6px;border-radius:4px;margin-left:auto}
+.nota-del-btn:hover{color:var(--no);background:var(--no-bg)}
+
+/* Formulario notas inline */
+.nota-form{background:var(--white);border:1.5px solid var(--sage);border-radius:var(--r);padding:12px;margin-bottom:8px}
+.nota-form .reply-banner{font-size:11px;color:var(--sage);margin-bottom:7px;display:flex;align-items:center;justify-content:space-between}
+.nota-form .reply-banner button{background:none;border:none;cursor:pointer;color:var(--muted);font-size:13px}
+.nota-form textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--rsm);font-size:.88rem;font-family:'Inter',sans-serif;color:var(--ink);background:var(--bg);outline:none;resize:none;height:68px}
+.nota-form textarea:focus{border-color:var(--sage)}
+.nota-form-actions{display:flex;gap:7px;margin-top:8px}
+.nota-submit{padding:7px 16px;background:var(--sage);color:white;border:none;border-radius:var(--rsm);font-size:.82rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif}
+.nota-cancel{padding:7px 12px;background:var(--bg2);color:var(--ink2);border:none;border-radius:var(--rsm);font-size:.82rem;cursor:pointer;font-family:'Inter',sans-serif}
+.add-nota-btn{width:100%;padding:10px;border:1.5px dashed var(--border2);border-radius:var(--r);background:var(--white);cursor:pointer;font-size:.85rem;color:var(--muted);font-family:'Inter',sans-serif;transition:all .15s;text-align:center;margin-top:4px}
+.nota-foto-upload{display:block;border:1.5px dashed var(--border2);border-radius:var(--rsm);padding:10px;text-align:center;cursor:pointer;color:var(--muted);font-size:.8rem;background:var(--bg);transition:all .15s;margin-top:8px}
+.nota-foto-upload:hover{border-color:var(--sage);color:var(--sage);background:var(--sage-l)}
+.nota-foto-upload input{display:none}
+.nota-img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--rsm);display:block;margin-bottom:8px;cursor:pointer}
+.nota-img-sq{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:var(--rsm);display:block;margin-bottom:8px;cursor:pointer}
+.add-nota-btn:hover{border-color:var(--sage);color:var(--sage);background:var(--sage-l)}
+
+/* Botón publicar en sección */
+.section-pub-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;background:var(--ink);color:white;border:none;border-radius:var(--r);font-size:.88rem;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:12px;transition:background .15s}
+.section-pub-btn:hover{background:var(--ink2)}
+
+/* ── DECISIONES ── */
+.decision-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden}
+.decision-card-header{display:flex;align-items:flex-start;gap:10px;padding:12px 13px}
+.decision-status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.dot-comprado{background:#16a34a}
+.dot-pendiente{background:#d97706}
+.dot-decidir{background:#9A9088}
+.decision-body{flex:1}
+.decision-title{font-size:.88rem;font-weight:500;color:var(--ink);margin-bottom:3px}
+.decision-origin{font-size:.75rem;color:var(--muted);margin-bottom:6px}
+.decision-tags{display:flex;gap:6px;flex-wrap:wrap}
+.dtag{font-size:.72rem;padding:2px 8px;border-radius:20px;font-weight:500;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .15s}
+.dtag-comprado{background:#f0fdf4;color:#16a34a}
+.dtag-comprado.active{background:#16a34a;color:white}
+.dtag-pendiente{background:#fffbeb;color:#d97706}
+.dtag-pendiente.active{background:#d97706;color:white}
+.dtag-decidir{background:var(--bg2);color:var(--muted)}
+.dtag-decidir.active{background:var(--muted);color:white}
+.decision-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:3px 5px;border-radius:4px;flex-shrink:0;align-self:flex-start}
+.decision-del:hover{color:var(--no);background:var(--no-bg)}
+.add-decision-btn{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border:1px solid var(--border2);border-radius:20px;background:none;cursor:pointer;font-size:.72rem;color:var(--muted);font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap}
+.add-decision-btn:hover{border-color:var(--clay);color:var(--clay);background:var(--clay-l)}
+.add-decision-btn.added{border-color:var(--sage);color:var(--sage);background:var(--sage-l)}
+.empty-decisions{text-align:center;padding:20px;color:var(--muted);font-size:.85rem;font-style:italic}
+.like-btn{display:flex;align-items:center;gap:4px;padding:5px 12px;border:1px solid var(--border);border-radius:20px;background:none;cursor:pointer;font-size:.78rem;color:var(--muted);font-family:'Inter',sans-serif;transition:all .15s}
+.like-btn:hover,.like-btn.liked{background:var(--clay-l);border-color:var(--clay);color:var(--clay)}
+.empty{text-align:center;padding:24px;color:var(--muted);font-size:.88rem}
+
+/* FORM */
+#bottom-form{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);box-shadow:0 -4px 20px rgba(26,24,20,.08);z-index:99}
+.form-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;user-select:none;max-width:680px;margin:0 auto}
+.form-bar-label{font-size:.9rem;font-weight:500;color:var(--ink)}
+.form-bar-icon{width:27px;height:27px;border-radius:50%;background:var(--sage);color:white;display:flex;align-items:center;justify-content:center;font-size:1.15rem;font-weight:300;transition:transform .25s;line-height:1}
+.form-bar-icon.open{transform:rotate(45deg)}
+.form-body{display:none;padding:0 16px 18px;max-height:60vh;overflow-y:auto;max-width:680px;margin:0 auto}
+.form-body.open{display:block}
+.fg{margin-bottom:10px}
+.fg label{display:block;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px}
+.fg input,.fg textarea{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--rsm);font-size:.88rem;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;outline:none}
+.fg input:focus,.fg textarea:focus{border-color:var(--sage)}
+.fg textarea{resize:none;height:72px}
+.foto-upload-area{border:1.5px dashed var(--border2);border-radius:var(--rsm);padding:13px;text-align:center;cursor:pointer;color:var(--muted);font-size:.82rem;background:var(--bg);transition:all .15s}
+.foto-upload-area:hover{border-color:var(--sage);color:var(--sage);background:var(--sage-l)}
+.foto-upload-area input{display:none}
+.f-preview{width:100%;max-height:110px;object-fit:cover;border-radius:var(--rsm);margin-top:7px;display:none}
+.pub-btn{width:100%;padding:11px;background:var(--sage);color:white;border:none;border-radius:var(--rsm);font-family:'Inter',sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;margin-top:4px}
+.pub-btn:hover{background:var(--sage-d)}
+
+/* LIGHTBOX */
+#lightbox{display:none;position:fixed;inset:0;background:rgba(26,24,20,.92);z-index:999;align-items:center;justify-content:center;cursor:pointer}
+#lightbox.open{display:flex}
+#lightbox img{max-width:92vw;max-height:88vh;border-radius:var(--r);object-fit:contain}
+
+/* TOAST */
+#toast{position:fixed;top:62px;left:50%;transform:translateX(-50%) translateY(-6px);background:var(--ink);color:white;padding:8px 20px;border-radius:24px;font-size:.8rem;font-weight:500;opacity:0;transition:all .2s;pointer-events:none;z-index:9999;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.35);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:5px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:400px){.status-btns{flex-direction:column}}
+</style>
+</head>
+<body>
+<div id="lightbox" onclick="closeLightbox()"><img id="lb-img" src="" alt=""></div>
+<div id="toast"></div>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-hero">
+    <div class="app-name">Casa Madridejos</div>
+    <div class="app-sub">decorando mi casita</div>
+    <div class="login-deco">
+      <div class="deco-sq" style="width:44px;height:44px"></div>
+      <div class="deco-sq" style="width:44px;height:30px"></div>
+      <div class="deco-sq" style="width:30px;height:44px"></div>
+      <div class="deco-sq" style="width:44px;height:38px"></div>
+      <div class="deco-sq" style="width:34px;height:44px"></div>
+    </div>
+  </div>
+  <div class="login-form">
+    <div class="form-q">¿Quién eres?</div>
+    <div class="chips" id="chips"></div>
+    <div class="or-line">o escribe tu nombre</div>
+    <div class="name-row">
+      <input type="text" id="name-input" placeholder="Tu nombre" maxlength="24">
+      <button class="btn-enter" onclick="login()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="tn">Casa Madridejos</div>
+        <div class="ts">decorando mi casita</div>
+      </div>
+      <div class="user-pill">
+        <div class="av" id="av"></div>
+        <span class="av-name" id="av-name"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="plano-section">
+      <div class="plano-lbl">Plano del piso — toca una habitación</div>
+      <div class="plano-wrap">
+        <svg viewBox="0 0 380 240" xmlns="http://www.w3.org/2000/svg" style="background:#EFF6FF">
+          <rect width="380" height="240" fill="#EFF6FF"/>
+          <rect x="200" y="62" width="158" height="138" rx="3" fill="#DBEAFE" stroke="#1E40AF" stroke-width="2"/>
+          <text x="279" y="134" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="500" fill="#1E40AF">Salón</text>
+          <rect x="18" y="14" width="108" height="100" rx="3" fill="#DBEAFE" stroke="#1E40AF" stroke-width="2"/>
+          <text x="72" y="68" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="500" fill="#1E40AF">Cuarto</text>
+          <rect x="18" y="122" width="108" height="80" rx="3" fill="#DBEAFE" stroke="#1E40AF" stroke-width="2"/>
+          <text x="72" y="166" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="500" fill="#1E40AF">Cocina</text>
+          <rect x="134" y="82" width="58" height="68" rx="3" fill="#BFDBFE" stroke="#1E40AF" stroke-width="2"/>
+          <text x="163" y="120" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="500" fill="#1E40AF">Baño</text>
+          <rect x="134" y="158" width="58" height="44" rx="3" fill="#BFDBFE" stroke="#1E40AF" stroke-width="2"/>
+          <text x="163" y="183" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="500" fill="#1E40AF">Recibidor</text>
+          <rect x="130" y="14" width="20" height="62" rx="1" fill="#E0F2FE" stroke="#93C5FD" stroke-width="1"/>
+          <rect x="200" y="60" width="70" height="5" rx="1" fill="#93C5FD"/>
+          <rect x="278" y="60" width="70" height="5" rx="1" fill="#93C5FD"/>
+          <text x="364" y="18" font-family="sans-serif" font-size="9" fill="#2563EB" text-anchor="middle" font-weight="600">N↑</text>
+        </svg>
+        <div class="hs" style="left:74%;top:59%" onclick="goRoom('salon')"><div class="hsb active" style="background:#166534" id="hsbtn-salon">🛋</div><div class="hsl">Salón</div></div>
+        <div class="hs" style="left:19%;top:28%" onclick="goRoom('cuarto')"><div class="hsb" style="background:#1e3a5f" id="hsbtn-cuarto">🛏</div><div class="hsl">Cuarto</div></div>
+        <div class="hs" style="left:19%;top:72%" onclick="goRoom('cocina')"><div class="hsb" style="background:#7c2d12" id="hsbtn-cocina">🍳</div><div class="hsl">Cocina</div></div>
+        <div class="hs" style="left:43%;top:52%" onclick="goRoom('bano')"><div class="hsb" style="background:#4c1d95" id="hsbtn-bano">🚿</div><div class="hsl">Baño</div></div>
+        <div class="hs" style="left:43%;top:80%" onclick="goRoom('recibidor')"><div class="hsb" style="background:#831843" id="hsbtn-recibidor">🚪</div><div class="hsl">Recibidor</div></div>
+      </div>
+      <div class="plano-hint">Toca una habitación para explorarla</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="tabs" id="tabs"></div>
+    <div id="content"></div>
+  </div>
+
+  <div id="bottom-form">
+    <div class="form-bar" onclick="toggleForm()">
+      <span class="form-bar-label">Añadir nota, enlace o foto</span>
+      <div class="form-bar-icon" id="ficon">+</div>
+    </div>
+    <div class="form-body" id="fbody">
+      <div class="fg"><label>Tu nota o idea</label><textarea id="f-text" placeholder="Escribe lo que se te ocurra sobre esta habitación…"></textarea></div>
+      <div class="fg">
+        <label>Foto (opcional)</label>
+        <label class="foto-upload-area">
+          <div id="upload-lbl">📷 Subir foto de inspiración o del espacio</div>
+          <input type="file" id="f-file" accept="image/*" onchange="pickFoto(this)">
+          <img class="f-preview" id="f-preview">
+        </label>
+      </div>
+      <div class="fg"><label>Enlace (opcional)</label><input type="url" id="f-link" placeholder="https://…"></div>
+      <div class="fg"><label>Producto / precio (opcional)</label><input type="text" id="f-prod" placeholder="Ej: Alfombra yute IKEA · 59€"></div>
+      <button class="pub-btn" id="pub-btn" onclick="publishPost()">Publicar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── FIREBASE ──
+firebase.initializeApp({
+  apiKey:"AIzaSyAQ6xP95QtpJ5bbRfnFmXgCuyVEUWn9sr0",
+  authDomain:"esther-trujillo.firebaseapp.com",
+  projectId:"esther-trujillo",
+  storageBucket:"esther-trujillo.firebasestorage.app",
+  messagingSenderId:"477764890376",
+  appId:"1:477764890376:web:4f843cc6f4c0c8b2df06bd"
+});
+const db = firebase.firestore();
+
+// ── PERSONAS ──
+const PERSONAS = {
+  Esther:{ color:'#B5654A', light:'#FAF0EB' },
+  Ali:   { color:'#4A7C59', light:'#EAF2EC' },
+  Paula: { color:'#7B5EA7', light:'#F3EFFC' },
+  María: { color:'#2563EB', light:'#EFF6FF' },
+  Alba:  { color:'#B8860B', light:'#FEFCE8' },
+  Albita:{ color:'#D4537E', light:'#FDF2F8' },
+};
+const NOMBRES = Object.keys(PERSONAS);
+
+// ── INVENTARIO BASE ──
+const INV_BASE = {
+  salon:[
+    {id:'s1',em:'🪑',nm:'Mesa comedor negra + sillas',st:'si',  desc:'La mesa negra con sus sillas. Se queda.'},
+    {id:'s2',em:'☕',nm:'Mesa bajita de centro',       st:'duda',desc:'¿Encaja con la nueva decoración?'},
+    {id:'s3',em:'📺',nm:'Mueble del televisor',        st:'no',  desc:'Fuera.'},
+    {id:'s4',em:'📚',nm:'Armario junto a la ventana',  st:'si',  desc:'Se queda. Buen almacenamiento y enmarca la ventana.'},
+    {id:'s5',em:'🎸',nm:'Guitarras',                   st:'duda',desc:'¿Las colgamos en la pared como elemento decorativo?'},
+  ],
+  cuarto:[
+    {id:'c1',em:'🛏',nm:'Cama doble',       st:'si',  desc:'Se queda, posible cambio de posición.'},
+    {id:'c2',em:'🚪',nm:'Armario empotrado',st:'si',  desc:'Fijo, no se puede quitar.'},
+    {id:'c3',em:'💻',nm:'Escritorio',       st:'duda',desc:'¿Lo quitamos o convertimos en tocador?'},
+  ],
+  bano:[
+    {id:'b1',em:'🚿',nm:'Mampara de ducha',st:'si', desc:'Se queda.'},
+    {id:'b2',em:'🪞',nm:'Espejo actual',   st:'no', desc:'Se cambia por uno con luz integrada.'},
+    {id:'b3',em:'🚽',nm:'Sanitarios',      st:'si', desc:'Se quedan.'},
+  ],
+  cocina:[
+    {id:'k1',em:'🪵',nm:'Muebles de cocina',st:'duda',desc:'¿Verde oscuro o negro mate?'},
+    {id:'k2',em:'⬛',nm:'Encimera negra',   st:'si',  desc:'Se queda.'},
+    {id:'k3',em:'🔌',nm:'Electrodomésticos',st:'si',  desc:'Todos se quedan.'},
+  ],
+  recibidor:[
+    {id:'r1',em:'🧥',nm:'Perchas actuales',st:'no',  desc:'Se quitan. Entra mueble nuevo.'},
+    {id:'r2',em:'🪞',nm:'Sin espejo aún',  st:'duda',desc:'Idea: espejo grande para dar amplitud.'},
+  ]
+};
+
+const ROOMS = [
+  {id:'salon',    label:'Salón',    estado:'Sofá gris, librería con guitarras, mesa de comedor negra. Buena luz al sur.',      idea:'Verde salvia en la pared principal. Alfombra de fibras naturales grande. Reorganizar la librería.',      plano:'4,20 × 5,10 m · Dos ventanas al sur'},
+  {id:'cuarto',   label:'Cuarto',   estado:'Cama doble, armario empotrado, escritorio en la esquina. Poca luz natural.',       idea:'Cambiar la posición de la cama. Más iluminación: apliques o lámparas colgantes.',                         plano:'2,61 × 3,57 m · Ventana al norte'},
+  {id:'bano',     label:'Baño',     estado:'Azulejos azules, ducha con mampara, lavabo de pedestal y WC.',                     idea:'Vinilos para los azulejos. Espejo con luz. Plantas.',                                                       plano:'1,80 × 2,40 m · Sin ventana exterior'},
+  {id:'cocina',   label:'Cocina',   estado:'Cocina en L, muebles blancos roto, encimera de granito negro.',                    idea:'¿Pintar armarios de verde oscuro? Barra americana para ganar superficie.',                                    plano:'2,60 × 3,10 m · Ventana sobre el fregadero'},
+  {id:'recibidor',label:'Recibidor',estado:'Pasillo estrecho ~90 cm, perchas viejas, suelo de parquet.',                       idea:'Mueble de entrada con zapatero. Espejo grande.',                                                             plano:'0,90 × 3,20 m'},
+];
+
+// ── ESTADO ──
+let me = null, currentRoom = 'salon', formOpen = false, newSt = 'duda', fotoData = null, unsub = null;
+let votes = {}, invComments = {}, invExtra = {};
+let estados = {}, planos = {};
+
+// ── HELPERS ──
+function pc(n){ return (PERSONAS[n]||{color:'#888'}).color; }
+function pl(n){ return (PERSONAS[n]||{light:'#F5F5F5'}).light; }
+function ini(n){ return (n||'?').slice(0,2).toUpperCase(); }
+function timeAgo(ts){
+  if(!ts) return '';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  const s = (Date.now()-d.getTime())/1000;
+  if(s<60) return 'ahora mismo';
+  if(s<3600) return `hace ${Math.floor(s/60)} min`;
+  if(s<86400) return `hace ${Math.floor(s/3600)} h`;
+  return d.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+}
+
+function compressImg(file, maxPx=900){
+  return new Promise(resolve=>{
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxPx/Math.max(img.width,img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width*scale);
+        c.height = Math.round(img.height*scale);
+        c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+        resolve(c.toDataURL('image/jpeg',.75));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ── LOGIN ──
+function initChips(){
+  const w = document.getElementById('chips');
+  NOMBRES.forEach(n => {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.textContent = n;
+    b.onclick = () => {
+      document.querySelectorAll('.chip').forEach(c=>{c.classList.remove('sel');c.style.background='';c.style.borderColor='';c.style.color='';});
+      b.classList.add('sel'); b.style.background=pc(n); b.style.borderColor=pc(n); b.style.color='white';
+      document.getElementById('name-input').value = n;
+    };
+    w.appendChild(b);
+  });
+}
+
+function login(){
+  const v = document.getElementById('name-input').value.trim();
+  if(!v){ toast('Escribe tu nombre primero'); return; }
+  me = v;
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('main').style.display = 'block';
+  const a = document.getElementById('av'); a.style.background = pc(me); a.textContent = ini(me);
+  document.getElementById('av-name').textContent = me;
+  buildTabs(); switchRoom('salon');
+}
+
+// ── TABS / ROOMS ──
+function buildTabs(){
+  const w = document.getElementById('tabs'); w.innerHTML = '';
+  ROOMS.forEach(r => {
+    const b = document.createElement('button');
+    b.className = 'tab'+(r.id===currentRoom?' active':'');
+    b.textContent = r.label; b.onclick = ()=>switchRoom(r.id); w.appendChild(b);
+  });
+}
+
+function goRoom(id){ switchRoom(id); setTimeout(()=>document.getElementById('tabs').scrollIntoView({behavior:'smooth',block:'start'}),60); }
+
+function switchRoom(id){
+  currentRoom = id;
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',ROOMS[i].id===id));
+  ROOMS.forEach(r=>{ const btn=document.getElementById('hsbtn-'+r.id); if(btn)btn.classList.toggle('active',r.id===id); });
+  if(unsub) unsub();
+  renderRoom();
+  subscribePosts();
+  if(formOpen) toggleForm();
+}
+
+// ── INVENTARIO ──
+function stTag(s){
+  if(s==='si')   return '<span class="tag tag-si">✓ Se queda</span>';
+  if(s==='no')   return '<span class="tag tag-no">✕ Fuera</span>';
+  return '<span class="tag tag-duda">? En duda</span>';
+}
+
+function renderInvItem(item){
+  const v = votes[item.id]||{si:[],no:[]};
+  const cms = invComments[item.id]||[];
+  const vsi = (v.si||[]).includes(me), vno = (v.no||[]).includes(me);
+  const sc = (v.si||[]).length, nc = (v.no||[]).length;
+  let html = '';
+  const cmsHtml = cms.map(c=>`<div class="icm">
+    <div class="icm-av" style="background:${pc(c.author)}">${ini(c.author)}</div>
+    <div class="icm-txt"><b>${c.author}</b><span>${c.text}</span></div>
+  </div>`).join('');
+  html = `<div class="inv-item" id="inv-${item.id}">
+    <div class="inv-hd" onclick="toggleItem('${item.id}')">
+      <span class="inv-em">${item.em}</span>
+      <span class="inv-nm">${item.nm}</span>
+      ${stTag(item.st)}
+      <button class="inv-del" onclick="delItem('${item.id}',event)" title="Eliminar">✕</button>
+    </div>
+    <div class="inv-bd" id="ibd-${item.id}">
+      ${item.desc?`<div class="inv-desc">${item.desc}</div>`:''}
+      <div class="inv-votes">
+        <button class="vbtn ${vsi?'vsi':''}" onclick="vote('${item.id}','si',event)">👍 A favor ${sc?`<strong>${sc}</strong>`:''}</button>
+        <button class="vbtn ${vno?'vno':''}" onclick="vote('${item.id}','no',event)">👎 En contra ${nc?`<strong>${nc}</strong>`:''}</button>
+      </div>
+      <div class="inv-cms" id="cms-${item.id}">${cmsHtml}</div>
+      <div class="iadd">
+        <input type="text" id="ci-${item.id}" placeholder="Comentar este objeto…" onkeydown="if(event.key==='Enter')addInvComment('${item.id}')">
+        <button onclick="addInvComment('${item.id}')">Enviar</button>
+      </div>
+      <div style="margin-top:10px">
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:7px">Fotos del objeto</div>
+        <div class="inv-foto-grid" id="invfgrid-${item.id}">
+          <label class="inv-upload-foto"><span style="font-size:16px">+</span><span>Foto</span><input type="file" accept="image/*" multiple onchange="uploadInvFoto('${item.id}',this)"></label>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  setTimeout(()=>loadInvFotos('${item.id}'), 80);
+  return html;
+}
+
+function toggleItem(id){ document.getElementById('ibd-'+id)?.classList.toggle('open'); }
+
+let invFotos = {}; // {itemId: [{id, src, author}]}
+
+async function uploadInvFoto(itemId, input){
+  const files = Array.from(input.files); if(!files.length) return;
+  for(const file of files){
+    try{
+      const data = await compressImg(file, 800);
+      const docRef = await db.collection('inv_fotos').add({
+        room:currentRoom, itemId, dataUrl:data, author:me,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+      if(!invFotos[itemId]) invFotos[itemId]=[];
+      invFotos[itemId].push({id:docRef.id, src:data, author:me});
+      renderInvFotoGrid(itemId);
+    }catch(e){ toast('Error al subir foto'); }
+  }
+  input.value=''; toast('Foto añadida al objeto');
+}
+
+async function delInvFoto(itemId, fotoId){
+  try{ await db.collection('inv_fotos').doc(fotoId).delete(); }catch(e){}
+  invFotos[itemId] = (invFotos[itemId]||[]).filter(x=>x.id!==fotoId);
+  renderInvFotoGrid(itemId);
+}
+
+function renderInvFotoGrid(itemId){
+  const grid = document.getElementById('invfgrid-'+itemId); if(!grid) return;
+  const fs = invFotos[itemId]||[];
+  const items = fs.map(f=>`<div class="inv-foto-sq">
+    <img src="${f.src}" alt="foto" onclick="openLightbox('${f.src}')">
+    <button class="f-del" onclick="delInvFoto('${itemId}','${f.id}')">✕</button>
+  </div>`).join('');
+  const upBtn = `<label class="inv-upload-foto"><span style="font-size:16px">+</span><span>Foto</span><input type="file" accept="image/*" multiple onchange="uploadInvFoto('${itemId}',this)"></label>`;
+  grid.innerHTML = items + upBtn;
+}
+
+async function loadInvFotos(itemId){
+  try{
+    const snap = await db.collection('inv_fotos').where('itemId','==',itemId).where('room','==',currentRoom).get();
+    invFotos[itemId] = snap.docs.map(d=>({id:d.id,...d.data(),src:d.data().dataUrl}));
+    renderInvFotoGrid(itemId);
+  }catch(e){ renderInvFotoGrid(itemId); }
+}
+
+async function vote(itemId, tipo, e){
+  e.stopPropagation();
+  if(!votes[itemId]) votes[itemId]={si:[],no:[]};
+  const otro = tipo==='si'?'no':'si';
+  votes[itemId][otro] = (votes[itemId][otro]||[]).filter(x=>x!==me);
+  const idx = (votes[itemId][tipo]||[]).indexOf(me);
+  if(idx===-1)(votes[itemId][tipo]=votes[itemId][tipo]||[]).push(me);
+  else votes[itemId][tipo].splice(idx,1);
+  try{ await db.collection('inv_votes').doc(`${currentRoom}_${itemId}`).set({room:currentRoom,itemId,votes:votes[itemId]},{merge:true}); }catch(e){}
+  const allItems = [...(INV_BASE[currentRoom]||[]),...(invExtra[currentRoom]||[])];
+  const item = allItems.find(x=>x.id===itemId);
+  if(item){
+    const el = document.getElementById('inv-'+itemId);
+    const wasOpen = document.getElementById('ibd-'+itemId)?.classList.contains('open');
+    if(el){ el.outerHTML=renderInvItem(item); if(wasOpen)document.getElementById('ibd-'+itemId)?.classList.add('open'); }
+  }
+  toast(tipo==='si'?'👍 A favor':'👎 En contra');
+}
+
+async function addInvComment(itemId){
+  const input = document.getElementById('ci-'+itemId);
+  const text = input?.value.trim(); if(!text) return;
+  const comment = {author:me, text, ts:Date.now()};
+  if(!invComments[itemId]) invComments[itemId]=[];
+  invComments[itemId].push(comment);
+  try{ await db.collection('inv_comments').add({room:currentRoom,itemId,...comment}); }catch(e){}
+  const cms = document.getElementById('cms-'+itemId);
+  if(cms) cms.innerHTML += `<div class="icm"><div class="icm-av" style="background:${pc(me)}">${ini(me)}</div><div class="icm-txt"><b>${me}</b><span>${text}</span></div></div>`;
+  if(input) input.value = '';
+}
+
+function delItem(itemId, e){
+  e.stopPropagation();
+  INV_BASE[currentRoom] = (INV_BASE[currentRoom]||[]).filter(x=>x.id!==itemId);
+  invExtra[currentRoom] = (invExtra[currentRoom]||[]).filter(x=>x.id!==itemId);
+  document.getElementById('inv-'+itemId)?.remove();
+  toast('Eliminado');
+}
+
+function setNewSt(s){
+  newSt = s;
+  ['si','duda','no'].forEach(x=>{
+    const b = document.getElementById('nst-'+x);
+    if(b) b.className = 'stbtn'+(s===x?' sel-'+s:'');
+  });
+}
+
+async function addExtra(){
+  const input = document.getElementById('ex-input');
+  const nm = input?.value.trim(); if(!nm) return;
+  if(!invExtra[currentRoom]) invExtra[currentRoom]=[];
+  const item = {id:'x'+Date.now(), em:'📦', nm, st:newSt, desc:'Añadido por '+me};
+  invExtra[currentRoom].push(item);
+  try{ await db.collection('inv_extra').add({room:currentRoom, item, author:me, createdAt:firebase.firestore.FieldValue.serverTimestamp()}); }catch(e){}
+  if(input) input.value = '';
+  document.getElementById('inv-items').innerHTML += renderInvItem(item);
+  toast('Objeto añadido');
+}
+
+// ── ESTADO / PLANO EDITABLE ──
+function editEstado(id){
+  const card = document.getElementById('ecard-'+id); if(!card) return;
+  const txt = estados[id]||ROOMS.find(r=>r.id===id)?.estado||'';
+  card.innerHTML = `<textarea class="estado-textarea" id="etxt-${id}">${txt}</textarea>
+    <button class="estado-save" onclick="saveEstado('${id}')">Guardar</button>`;
+}
+async function saveEstado(id){
+  const v = document.getElementById('etxt-'+id)?.value.trim(); if(!v) return;
+  estados[id] = v;
+  try{ await db.collection('room_data').doc(id).set({estado:v},{merge:true}); }catch(e){}
+  const card = document.getElementById('ecard-'+id);
+  if(card) card.innerHTML = `<p class="estado-text">${v}</p><button class="estado-edit-btn" onclick="editEstado('${id}')">✏️</button>`;
+  toast('Guardado');
+}
+
+function editPlano(id){
+  const el = document.getElementById('plano-txt-'+id); if(!el) return;
+  const cur = planos[id]||ROOMS.find(r=>r.id===id)?.plano||'';
+  el.innerHTML = `<input type="text" id="ptxt-${id}" value="${cur}" style="flex:1;padding:5px 8px;border:1.5px solid var(--sage);border-radius:var(--rsm);font-size:.82rem;font-family:'Inter',sans-serif;outline:none;background:var(--white)">
+    <button onclick="savePlano('${id}')" style="padding:5px 10px;background:var(--sage);color:white;border:none;border-radius:var(--rsm);font-size:.75rem;cursor:pointer;font-family:'Inter',sans-serif">OK</button>`;
+}
+async function savePlano(id){
+  const v = document.getElementById('ptxt-'+id)?.value.trim(); if(!v) return;
+  planos[id] = v;
+  try{ await db.collection('room_data').doc(id).set({plano:v},{merge:true}); }catch(e){}
+  const el = document.getElementById('plano-txt-'+id);
+  if(el) el.innerHTML = `<span>📐 ${v}</span><button onclick="editPlano('${id}')" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:13px;padding:0 4px;margin-left:4px">✏️</button>`;
+  toast('Guardado');
+}
+
+// ── FOTOS DEL ESPACIO ──
+async function uploadFotoEspacio(input){
+  const files = Array.from(input.files); if(!files.length) return;
+  for(const file of files){
+    try{
+      const data = await compressImg(file, 1000);
+      await db.collection('fotos_casa').add({room:currentRoom, dataUrl:data, author:me, createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    }catch(e){ toast('Error al subir foto'); }
+  }
+  input.value = ''; loadFotosGrid(); toast('✅ Foto añadida');
+}
+
+async function loadFotosGrid(){
+  const grid = document.getElementById('fotos-grid'); if(!grid) return;
+  try{
+    const snap = await db.collection('fotos_casa').where('room','==',currentRoom).orderBy('createdAt','asc').get();
+    const fotos = snap.docs.map(d=>({id:d.id,...d.data()}));
+    const items = fotos.map(f=>`<div class="foto-sq">
+      <img src="${f.dataUrl}" alt="foto" onclick="openLightbox('${f.dataUrl}')">
+      <button class="f-del" onclick="delFotoEspacio('${f.id}')">✕</button>
+      <span class="f-who">${(f.author||'').split(' ')[0]}</span>
+    </div>`).join('');
+    const upBtn = `<label class="upload-foto"><span style="font-size:20px">+</span><span>Foto</span><input type="file" accept="image/*" multiple onchange="uploadFotoEspacio(this)"></label>`;
+    grid.innerHTML = items + upBtn;
+  }catch(e){ const g=document.getElementById('fotos-grid'); if(g)g.innerHTML=`<div class="empty" style="grid-column:1/-1">⚠️ Error al cargar fotos</div>`; }
+}
+
+async function delFotoEspacio(id){
+  try{ await db.collection('fotos_casa').doc(id).delete(); }catch(e){}
+  loadFotosGrid(); toast('Foto eliminada');
+}
+
+// ── POSTS (Firebase realtime) ──
+function subscribePosts(){
+  unsub = db.collection('posts').where('room','==',currentRoom).orderBy('createdAt','desc')
+    .onSnapshot(snap=>{ renderPosts(snap.docs.map(d=>({id:d.id,...d.data()}))); },
+    err=>{
+      // Fallback: load without orderBy if index not ready
+      db.collection('posts').where('room','==',currentRoom).get()
+        .then(snap=>{
+          const posts = snap.docs.map(d=>({id:d.id,...d.data()}))
+            .sort((a,b)=>{ const ta=a.createdAt?.toMillis?.()||0; const tb=b.createdAt?.toMillis?.()||0; return tb-ta; });
+          renderPosts(posts);
+        })
+        .catch(()=>{ const el=document.getElementById('posts-list'); if(el)el.innerHTML=`<div class="empty">⚠️ Error al cargar. Revisa la conexión.</div>`; });
+    });
+}
+
+function renderPosts(posts){
+  const el = document.getElementById('posts-list'); if(!el) return;
+  if(!posts.length){ el.innerHTML=`<div class="empty">Sé la primera en publicar algo ✨</div>`; return; }
+  el.innerHTML = posts.map(p=>{
+    const liked = (p.likedBy||[]).includes(me);
+    const lc = (p.likedBy||[]).length;
+    const isAuthor = p.author === me;
+    const ownerBtns = isAuthor ? `
+      <div class="post-menu">
+        <button class="post-menu-btn" onclick="editPost('${p.id}','${(p.text||'').replace(/'/g,"\'")}')">✏️ Editar</button>
+        <button class="post-menu-btn del" onclick="deletePost('${p.id}')">🗑 Borrar</button>
+      </div>` : '';
+    return `<div class="post-card" id="pcard-${p.id}" style="border-left:3px solid ${pc(p.author)}">
+      <div class="post-header">
+        <div class="post-av" style="background:${pc(p.author)}">${ini(p.author)}</div>
+        <div class="post-meta">
+          <div class="post-name">${p.author}</div>
+          <div class="post-time">${timeAgo(p.createdAt)}</div>
+        </div>
+      </div>
+      ${p.fotoData?`<img class="post-img" src="${p.fotoData}" alt="foto" onclick="openLightbox('${p.fotoData}')">` :''}
+      <div class="post-body">
+        <div class="post-text-wrap" id="ptxt-${p.id}">${p.text?`<div class="post-text">${p.text}</div>`:''}</div>
+        ${p.linkUrl?`<a class="post-link" href="${p.linkUrl}" target="_blank" rel="noopener">
+          <span class="post-link-icon">🔗</span>
+          <div class="post-link-info">
+            <div class="post-link-name">${p.prod||p.linkUrl.replace(/^https?:\/\/(www\.)?/,'').split('/')[0]}</div>
+            <div class="post-link-url">${p.linkUrl.replace(/^https?:\/\/(www\.)?/,'').split('/')[0]}</div>
+          </div>
+          ${p.prod&&p.prod.includes('·')?`<span class="post-link-price">${p.prod.split('·').pop().trim()}</span>`:''}
+        </a>`:''}
+        <div class="post-actions">
+          <button class="like-btn ${liked?'liked':''}" onclick="likePost('${p.id}',${liked})">♥ ${lc||''}</button>
+          <button class="add-decision-btn" onclick="addDecision('${(p.text||p.prod||'Publicación').slice(0,80).replace(/'/g,'\\'')','publicación')">📌 Añadir a decisiones</button>
+          ${ownerBtns}
+        </div>
+      </div>
+      <div class="post-edit-area" id="pedit-${p.id}" style="display:none">
+        <textarea id="petxt-${p.id}" placeholder="Edita tu publicación…">${p.text||''}</textarea>
+        <div class="edit-actions">
+          <button class="post-edit-save" onclick="saveEditPost('${p.id}')">Guardar</button>
+          <button class="post-edit-cancel" onclick="cancelEditPost('${p.id}')">Cancelar</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function editPost(id, currentText){
+  document.getElementById('pedit-'+id).style.display='block';
+  const ta = document.getElementById('petxt-'+id);
+  if(ta){ ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }
+}
+
+function cancelEditPost(id){
+  document.getElementById('pedit-'+id).style.display='none';
+}
+
+async function saveEditPost(id){
+  const ta = document.getElementById('petxt-'+id);
+  const newText = ta?.value.trim();
+  try{
+    await db.collection('posts').doc(id).update({ text: newText||null });
+    document.getElementById('pedit-'+id).style.display='none';
+    toast('Publicación actualizada');
+  }catch(e){ toast('Error al guardar'); }
+}
+
+// ── NOTAS E IDEAS ──
+let notasData = {}; // {roomId: [{id, author, text, foto, replyTo, ts}]}
+let notaReplyTo = null; // {id, author, text}
+let notaFotoData = null;
+
+async function loadNotas(){
+  try{
+    const snap = await db.collection('notas_ideas')
+      .where('room','==',currentRoom)
+      .orderBy('ts','asc').get();
+    notasData[currentRoom] = snap.docs.map(d=>({id:d.id,...d.data()}));
+  }catch(e){
+    // fallback sin orderBy
+    try{
+      const snap = await db.collection('notas_ideas').where('room','==',currentRoom).get();
+      notasData[currentRoom] = snap.docs.map(d=>({id:d.id,...d.data()}))
+        .sort((a,b)=>(a.ts||0)-(b.ts||0));
+    }catch(e2){ notasData[currentRoom]=[]; }
+  }
+  renderNotas();
+}
+
+function renderNotas(){
+  const el = document.getElementById('notas-section'); if(!el) return;
+  const notas = notasData[currentRoom]||[];
+  const room = ROOMS.find(r=>r.id===currentRoom);
+
+  const notasHtml = notas.map(n=>{
+    const isAuthor = n.author===me;
+    const replyHtml = n.replyTo ? `<div class="nota-reply-to">↩ ${n.replyTo.author}: "${(n.replyTo.text||'').slice(0,60)}${(n.replyTo.text||'').length>60?'…':''}"</div>` : '';
+    return `<div class="nota-card${n.replyTo?'  reply':''}" id="nota-${n.id}">
+      <div class="nota-head">
+        <div class="av" style="background:${pc(n.author)};width:24px;height:24px;font-size:9px;flex-shrink:0">${ini(n.author)}</div>
+        <span style="font-size:12px;font-weight:600;color:var(--ink)">${n.author}</span>
+        <span style="font-size:11px;color:var(--muted);margin-left:4px">${n.ts?timeAgo({toDate:()=>new Date(n.ts)}):'ahora'}</span>
+      </div>
+      ${replyHtml}
+      ${n.foto?`<img class="nota-img-sq" src="${n.foto}" alt="imagen" onclick="openLightbox('${n.foto}')">` :''}
+      ${n.text?`<div class="nota-text">${n.text}</div>`:''}
+      <div class="nota-actions">
+        <button class="nota-reply-btn" onclick="startReply('${n.id}','${n.author}','${(n.text||'').replace(/'/g,"\'").slice(0,80)}')">↩ Responder</button>
+        ${isAuthor?`<button class="nota-del-btn" onclick="deleteNota('${n.id}')">🗑</button>`:''}
+        <button class="add-decision-btn" data-nota onclick="addDecision(this.closest('[id]').querySelector('.nota-text')?.textContent?.slice(0,80)||'','nota')">📌 Decisiones</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="idea-box" style="margin-bottom:10px"><p>${room.idea}</p></div>
+    ${notasHtml}
+    <div id="nota-form-wrap"></div>
+    <button class="add-nota-btn" onclick="showNotaForm()">✏️ Escribir una nota o idea</button>`;
+}
+
+function showNotaForm(replyTo){
+  notaReplyTo = replyTo||null;
+  const wrap = document.getElementById('nota-form-wrap'); if(!wrap) return;
+  const replyBanner = replyTo ? `<div class="reply-banner"><span>↩ Respondiendo a <strong>${replyTo.author}</strong></span><button onclick="cancelNota()">✕</button></div>` : '';
+  wrap.innerHTML = `<div class="nota-form">
+    ${replyBanner}
+    <textarea id="nota-txt" placeholder="${replyTo?'Escribe tu respuesta…':'Escribe tu nota o idea…'}"></textarea>
+    <label class="nota-foto-upload" id="nota-foto-label">
+      <span id="nota-foto-lbl-txt">🖼 Subir imagen (IA, inspiración, render…)</span>
+      <input type="file" id="nota-foto-input" accept="image/*" onchange="pickNotaFoto(this)">
+    </label>
+    <img id="nota-foto-preview" style="display:none;width:100%;max-height:120px;object-fit:cover;border-radius:var(--rsm);margin-top:6px">
+    <div class="nota-form-actions">
+      <button class="nota-submit" onclick="submitNota()">Publicar</button>
+      <button class="nota-cancel" onclick="cancelNota()">Cancelar</button>
+    </div>
+  </div>`;
+  document.getElementById('nota-txt')?.focus();
+  // hide add button
+  document.querySelector('.add-nota-btn')?.style && (document.querySelector('.add-nota-btn').style.display='none');
+}
+
+function startReply(id, author, text){
+  showNotaForm({id, author, text});
+}
+
+function pickNotaFoto(input){
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    notaFotoData = e.target.result;
+    const prev = document.getElementById('nota-foto-preview');
+    if(prev){ prev.src = notaFotoData; prev.style.display='block'; }
+    const lbl = document.getElementById('nota-foto-lbl-txt');
+    if(lbl) lbl.textContent = '✅ Imagen lista';
+  };
+  reader.readAsDataURL(file);
+}
+
+function cancelNota(){
+  const wrap = document.getElementById('nota-form-wrap'); if(wrap) wrap.innerHTML='';
+  const btn = document.querySelector('.add-nota-btn'); if(btn) btn.style.display='';
+  notaReplyTo = null;
+  notaFotoData = null;
+}
+
+async function submitNota(){
+  const text = document.getElementById('nota-txt')?.value.trim();
+  if(!text && !notaFotoData){ toast('Escribe algo o añade una imagen'); return; }
+  let fotoCompressed = null;
+  if(notaFotoData){
+    try{
+      const file = document.getElementById('nota-foto-input')?.files[0];
+      if(file) fotoCompressed = await compressImg(file, 900);
+      else fotoCompressed = notaFotoData;
+    }catch(e){ fotoCompressed = notaFotoData; }
+  }
+  const nota = {
+    room:currentRoom, author:me, text:text||null,
+    foto:fotoCompressed||null,
+    ts:Date.now(),
+    replyTo: notaReplyTo||null
+  };
+  try{
+    const ref = await db.collection('notas_ideas').add({...nota, createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    nota.id = ref.id;
+    if(!notasData[currentRoom]) notasData[currentRoom]=[];
+    notasData[currentRoom].push(nota);
+    notaReplyTo=null; notaFotoData=null;
+    renderNotas();
+    toast('Nota publicada ✓');
+  }catch(e){ toast('Error al publicar'); }
+}
+
+async function deleteNota(id){
+  if(!confirm('¿Borrar esta nota?')) return;
+  try{
+    await db.collection('notas_ideas').doc(id).delete();
+    notasData[currentRoom]=(notasData[currentRoom]||[]).filter(x=>x.id!==id);
+    renderNotas(); toast('Nota eliminada');
+  }catch(e){ toast('Error al borrar'); }
+}
+
+async function deletePost(id){
+  if(!confirm('¿Borrar esta publicación?')) return;
+  try{
+    await db.collection('posts').doc(id).delete();
+    document.getElementById('pcard-'+id)?.remove();
+    toast('Publicación eliminada');
+  }catch(e){ toast('Error al borrar'); }
+}
+
+async function likePost(id, liked){
+  try{
+    await db.collection('posts').doc(id).update({
+      likedBy: liked ? firebase.firestore.FieldValue.arrayRemove(me) : firebase.firestore.FieldValue.arrayUnion(me)
+    });
+  }catch(e){}
+}
+
+// ── FORM ──
+// ── DECISIONES ──
+let decisiones = {}; // {roomId: [{id, text, origin, status, author, ts}]}
+
+async function loadDecisiones(){
+  try{
+    const snap = await db.collection('decisiones').where('room','==',currentRoom).orderBy('ts','asc').get();
+    decisiones[currentRoom] = snap.docs.map(d=>({id:d.id,...d.data()}));
+  }catch(e){
+    try{
+      const snap = await db.collection('decisiones').where('room','==',currentRoom).get();
+      decisiones[currentRoom] = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.ts||0)-(b.ts||0));
+    }catch(e2){ decisiones[currentRoom]=[]; }
+  }
+  renderDecisiones();
+}
+
+function renderDecisiones(){
+  const el = document.getElementById('decisiones-section'); if(!el) return;
+  const items = decisiones[currentRoom]||[];
+  if(!items.length){
+    el.innerHTML=`<div class="empty-decisions">Aún no hay decisiones — añade una desde una nota o publicación</div>`;
+    return;
+  }
+  el.innerHTML = items.map(d=>{
+    const dot = d.status==='comprado'?'comprado':d.status==='pendiente'?'pendiente':'decidir';
+    const label = d.status==='comprado'?'✅ Comprado':d.status==='pendiente'?'🛒 Pendiente de comprar':'💡 Por decidir';
+    return `<div class="decision-card" id="dec-${d.id}">
+      <div class="decision-card-header">
+        <div class="decision-status-dot dot-${dot}"></div>
+        <div class="decision-body">
+          <div class="decision-title">${d.text}</div>
+          <div class="decision-origin">Añadido por ${d.author}${d.origin?' · desde: '+d.origin:''}</div>
+          <div class="decision-tags">
+            <button class="dtag dtag-comprado${d.status==='comprado'?' active':''}" onclick="setDecisionStatus('${d.id}','comprado')">✅ Comprado</button>
+            <button class="dtag dtag-pendiente${d.status==='pendiente'?' active':''}" onclick="setDecisionStatus('${d.id}','pendiente')">🛒 Pendiente</button>
+            <button class="dtag dtag-decidir${d.status==='decidir'?' active':''}" onclick="setDecisionStatus('${d.id}','decidir')">💡 Por decidir</button>
+          </div>
+        </div>
+        <button class="decision-del" onclick="deleteDecision('${d.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function addDecision(text, origin){
+  const item = {
+    room:currentRoom, text:(text||'').slice(0,200), origin:origin||'',
+    author:me, status:'decidir', ts:Date.now()
+  };
+  try{
+    const ref = await db.collection('decisiones').add({...item, createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    item.id = ref.id;
+    if(!decisiones[currentRoom]) decisiones[currentRoom]=[];
+    decisiones[currentRoom].push(item);
+    renderDecisiones();
+    toast('Añadido a decisiones ✓');
+  }catch(e){ toast('Error al guardar'); }
+}
+
+async function setDecisionStatus(id, status){
+  try{
+    await db.collection('decisiones').doc(id).update({status});
+    const d = (decisiones[currentRoom]||[]).find(x=>x.id===id);
+    if(d){ d.status=status; renderDecisiones(); }
+  }catch(e){ toast('Error al actualizar'); }
+}
+
+async function deleteDecision(id){
+  try{
+    await db.collection('decisiones').doc(id).delete();
+    decisiones[currentRoom]=(decisiones[currentRoom]||[]).filter(x=>x.id!==id);
+    renderDecisiones(); toast('Eliminado');
+  }catch(e){ toast('Error al borrar'); }
+}
+
+function openFormFromSection(){
+  if(!formOpen) toggleForm();
+  setTimeout(()=>document.getElementById('fbody').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+function toggleForm(){
+  formOpen = !formOpen;
+  document.getElementById('fbody').classList.toggle('open', formOpen);
+  document.getElementById('ficon').classList.toggle('open', formOpen);
+}
+
+function pickFoto(input){
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    fotoData = e.target.result;
+    const p = document.getElementById('f-preview'); p.src=fotoData; p.style.display='block';
+    document.getElementById('upload-lbl').textContent = '✅ Foto lista';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function publishPost(){
+  const text = document.getElementById('f-text').value.trim();
+  const link = document.getElementById('f-link').value.trim();
+  const prod = document.getElementById('f-prod').value.trim();
+  if(!text&&!link&&!fotoData){ toast('Añade algo antes de publicar'); return; }
+  const btn = document.getElementById('pub-btn'); btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Publicando…';
+  try{
+    let compressed = null;
+    if(fotoData){ const file=document.getElementById('f-file').files[0]; if(file)compressed=await compressImg(file,600); }
+    await db.collection('posts').add({
+      room:currentRoom, author:me, createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+      text:text||null, fotoData:compressed||null, linkUrl:link||null, prod:prod||null, likedBy:[]
+    });
+    document.getElementById('f-text').value=''; document.getElementById('f-link').value=''; document.getElementById('f-prod').value='';
+    document.getElementById('f-file').value=''; document.getElementById('f-preview').style.display='none';
+    document.getElementById('upload-lbl').textContent='📷 Subir foto de inspiración o del espacio';
+    fotoData=null; toggleForm(); toast('¡Publicado! 🎉');
+  }catch(e){ console.error(e); toast('Error al publicar. Revisa la conexión.'); }
+  finally{ btn.disabled=false; btn.innerHTML='Publicar'; }
+}
+
+// ── RENDER ROOM ──
+async function renderRoom(){
+  const room = ROOMS.find(r=>r.id===currentRoom);
+  const el = document.getElementById('content');
+
+  // Cargar datos de Firestore
+  try{
+    const rdoc = await db.collection('room_data').doc(currentRoom).get();
+    if(rdoc.exists){ const d=rdoc.data(); if(d.estado)estados[currentRoom]=d.estado; if(d.plano)planos[currentRoom]=d.plano; }
+    const vsnap = await db.collection('inv_votes').where('room','==',currentRoom).get();
+    vsnap.docs.forEach(d=>{ const data=d.data(); if(data.itemId)votes[data.itemId]=data.votes||{si:[],no:[]}; });
+    const csnap = await db.collection('inv_comments').where('room','==',currentRoom).orderBy('ts','asc').get();
+    csnap.docs.forEach(d=>{ const data=d.data(); if(!invComments[data.itemId])invComments[data.itemId]=[]; invComments[data.itemId].push({author:data.author,text:data.text}); });
+    const esnap = await db.collection('inv_extra').where('room','==',currentRoom).orderBy('createdAt','asc').get();
+    invExtra[currentRoom] = esnap.docs.map(d=>d.data().item);
+  }catch(e){ console.log('load error',e); }
+
+  const est = estados[currentRoom]||room.estado;
+  const pla = planos[currentRoom]||room.plano;
+  const allInv = [...(INV_BASE[currentRoom]||[]),...(invExtra[currentRoom]||[])];
+
+  el.innerHTML = `
+    <div class="section">
+      <div class="sec-lbl">Fotos del espacio</div>
+      <div class="fotos-grid" id="fotos-grid"><div class="empty" style="grid-column:1/-1;padding:14px">📷 Cargando…</div></div>
+    </div>
+    <div class="section">
+      <div class="sec-lbl">Estado actual</div>
+      <div class="estado-card" id="ecard-${currentRoom}">
+        <p class="estado-text">${est}</p>
+        <button class="estado-edit-btn" onclick="editEstado('${currentRoom}')">✏️</button>
+      </div>
+      <div class="plan-card">
+        <div id="plano-txt-${currentRoom}" style="display:flex;align-items:center;gap:6px;flex:1">
+          <span>📐 ${pla}</span>
+          <button onclick="editPlano('${currentRoom}')" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:13px;padding:0 4px">✏️</button>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="sec-lbl">Inventario — ¿qué se queda?</div>
+      <div id="inv-items">${allInv.map(renderInvItem).join('')}</div>
+      <div class="add-inv-form">
+        <input type="text" id="ex-input" placeholder="Nombre del objeto…">
+        <div class="status-btns">
+          <button class="stbtn" id="nst-si" onclick="setNewSt('si')">✓ Se queda</button>
+          <button class="stbtn sel-duda" id="nst-duda" onclick="setNewSt('duda')">? En duda</button>
+          <button class="stbtn" id="nst-no" onclick="setNewSt('no')">✕ Fuera</button>
+        </div>
+        <button class="go" onclick="addExtra()">Añadir al inventario</button>
+      </div>
+    </div>
+    <div class="section">
+      <div class="sec-lbl">Notas e ideas</div>
+      <div id="notas-section"><div class="empty" style="padding:16px">Cargando…</div></div>
+    </div>
+    <div class="section">
+      <div class="sec-lbl">Publicaciones</div>
+      <button class="section-pub-btn" onclick="openFormFromSection()">+ Añadir publicación, foto o enlace</button>
+      <div id="posts-list"><div class="empty">💬 Cargando…</div></div>
+    </div>
+    <div class="section">
+      <div class="sec-lbl">Decisiones</div>
+      <div id="decisiones-section"><div class="empty-decisions">Cargando…</div></div>
+    </div>`;
+
+  loadFotosGrid();
+  loadNotas();
+  loadDecisiones();
+  newSt = 'duda';
+}
+
+// ── LIGHTBOX ──
+function openLightbox(src){ document.getElementById('lb-img').src=src; document.getElementById('lightbox').classList.add('open'); }
+function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
+
+// ── TOAST ──
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); }
+
+initChips();
+</script>
+</body>
+</html>
